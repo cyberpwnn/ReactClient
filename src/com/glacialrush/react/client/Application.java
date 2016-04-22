@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -20,8 +22,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -30,9 +34,9 @@ import com.glacialrush.react.Version;
 import com.glacialrush.react.json.JSONObject;
 import com.glacialrush.react.util.Format;
 import com.glacialrush.react.util.GList;
+import com.glacialrush.react.util.Stub;
 
 import net.miginfocom.swing.MigLayout;
-import java.awt.SystemColor;
 
 public class Application
 {
@@ -48,7 +52,19 @@ public class Application
 	private JLabel lblMem;
 	private JLabel lblMahs;
 	private JLabel lblSpms_1;
-
+	private JLabel lblEntities;
+	private JLabel lblDrops;
+	private JLabel lblChunks;
+	private JLabel lblmsInterval;
+	private JLabel lblkSize;
+	private JLabel lblTotal;
+	private JLabel lblProblemstub;
+	private JLabel lblAgo;
+	private JLabel lblUsername;
+	private JLabel lblConnectedWith;
+	
+	private JTextArea txtrProblem;
+	
 	private int maxMem;
 	private int maxThr;
 	private String serverVersion;
@@ -67,6 +83,14 @@ public class Application
 	private JPanel RCT;
 	private Grapher GRCT;
 	
+	private static long ns = 1000000;
+	private static long lns = System.nanoTime();
+	private static long sz = 12345;
+	private static long tot = 0;
+	private static int size;
+	private static String username;
+	private static GList<Stub> stubs;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -78,6 +102,7 @@ public class Application
 			{
 				try
 				{
+					stubs = new GList<Stub>();
 					Application window = new Application();
 					instance = window;
 					window.frmReactClient.setVisible(true);
@@ -120,9 +145,10 @@ public class Application
 		menuBar.add(mnReact);
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.addMouseListener(new MouseAdapter() {
+		mntmAbout.addMouseListener(new MouseAdapter()
+		{
 			@Override
-			public void mouseReleased(MouseEvent e) 
+			public void mouseReleased(MouseEvent e)
 			{
 				popup("About", "React Client v" + Version.V + "\nAlpha testing, If something isnt working, or is having problems, please understand it is not finished yet.");
 			}
@@ -130,7 +156,8 @@ public class Application
 		mnReact.add(mntmAbout);
 		
 		JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.addMouseListener(new MouseAdapter() {
+		mntmExit.addMouseListener(new MouseAdapter()
+		{
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
@@ -145,14 +172,15 @@ public class Application
 		menuBar.add(mnHelp);
 		
 		JMenuItem mntmSupport = new JMenuItem("Support");
-		mntmSupport.addMouseListener(new MouseAdapter() {
+		mntmSupport.addMouseListener(new MouseAdapter()
+		{
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
 				try
 				{
 					Desktop.getDesktop().browse(new URI("https://www.spigotmc.org/threads/react-smart-server-performance-paid.136824/"));
-				} 
+				}
 				
 				catch(IOException | URISyntaxException e1)
 				{
@@ -160,16 +188,17 @@ public class Application
 				}
 			}
 		});
-		
+				
 		mntmWiki = new JMenuItem("Wiki");
-		mntmWiki.addMouseListener(new MouseAdapter() {
+		mntmWiki.addMouseListener(new MouseAdapter()
+		{
 			@Override
-			public void mouseReleased(MouseEvent e) 
+			public void mouseReleased(MouseEvent e)
 			{
 				try
 				{
 					Desktop.getDesktop().browse(new URI("https://github.com/cyberpwnn/React/wiki/Remote"));
-				} 
+				}
 				
 				catch(IOException | URISyntaxException e1)
 				{
@@ -181,14 +210,15 @@ public class Application
 		mnHelp.add(mntmSupport);
 		
 		JMenuItem mntmSubmitIssue = new JMenuItem("Submit Bug");
-		mntmSubmitIssue.addMouseListener(new MouseAdapter() {
+		mntmSubmitIssue.addMouseListener(new MouseAdapter()
+		{
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
 				try
 				{
 					Desktop.getDesktop().browse(new URI("https://github.com/cyberpwnn/React/issues/new"));
-				} 
+				}
 				
 				catch(IOException | URISyntaxException e1)
 				{
@@ -254,7 +284,7 @@ public class Application
 		JPanel cardGetStarted = new JPanel();
 		sl_panelCards.putConstraint(SpringLayout.NORTH, cardGetStarted, 9, SpringLayout.SOUTH, cartReact);
 		sl_panelCards.putConstraint(SpringLayout.WEST, cardGetStarted, 3, SpringLayout.WEST, cartReact);
-		sl_panelCards.putConstraint(SpringLayout.SOUTH, cardGetStarted, 212, SpringLayout.SOUTH, cartReact);
+		sl_panelCards.putConstraint(SpringLayout.SOUTH, cardGetStarted, 278, SpringLayout.SOUTH, cartReact);
 		sl_panelCards.putConstraint(SpringLayout.EAST, cardGetStarted, 0, SpringLayout.EAST, cartReact);
 		cardGetStarted.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		cardGetStarted.setBackground(Color.WHITE);
@@ -273,6 +303,70 @@ public class Application
 		sl_cardGetStarted.putConstraint(SpringLayout.WEST, lblStartInThe, 10, SpringLayout.WEST, cardGetStarted);
 		lblStartInThe.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
 		cardGetStarted.add(lblStartInThe);
+		
+		JPanel panel_5 = new JPanel();
+		sl_panelCards.putConstraint(SpringLayout.SOUTH, panel_5, -48, SpringLayout.SOUTH, cartReact);
+		panel_5.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_5.setBackground(Color.WHITE);
+		sl_panelCards.putConstraint(SpringLayout.NORTH, panel_5, 0, SpringLayout.NORTH, cartReact);
+		sl_panelCards.putConstraint(SpringLayout.WEST, panel_5, 6, SpringLayout.EAST, cartReact);
+		sl_panelCards.putConstraint(SpringLayout.EAST, panel_5, 330, SpringLayout.EAST, cartReact);
+		panelCards.add(panel_5);
+		SpringLayout sl_panel_5 = new SpringLayout();
+		panel_5.setLayout(sl_panel_5);
+		
+		JLabel lblWelcome = new JLabel("Welcome");
+		lblWelcome.setFont(new Font("Yu Gothic Light", Font.PLAIN, 64));
+		sl_panel_5.putConstraint(SpringLayout.NORTH, lblWelcome, 10, SpringLayout.NORTH, panel_5);
+		sl_panel_5.putConstraint(SpringLayout.WEST, lblWelcome, 10, SpringLayout.WEST, panel_5);
+		panel_5.add(lblWelcome);
+		
+		lblUsername = new JLabel("Username");
+		sl_panel_5.putConstraint(SpringLayout.NORTH, lblUsername, 3, SpringLayout.SOUTH, lblWelcome);
+		sl_panel_5.putConstraint(SpringLayout.WEST, lblUsername, 0, SpringLayout.WEST, lblWelcome);
+		lblUsername.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_5.add(lblUsername);
+		
+		lblConnectedWith = new JLabel("Connected with 0 others");
+		sl_panel_5.putConstraint(SpringLayout.WEST, lblConnectedWith, 0, SpringLayout.WEST, lblWelcome);
+		sl_panel_5.putConstraint(SpringLayout.SOUTH, lblConnectedWith, -10, SpringLayout.SOUTH, panel_5);
+		lblConnectedWith.setFont(new Font("Yu Gothic Light", Font.PLAIN, 14));
+		panel_5.add(lblConnectedWith);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_6.setBackground(Color.WHITE);
+		sl_panelCards.putConstraint(SpringLayout.NORTH, panel_6, 9, SpringLayout.SOUTH, panel_5);
+		sl_panelCards.putConstraint(SpringLayout.WEST, panel_6, 9, SpringLayout.EAST, cartReact);
+		sl_panelCards.putConstraint(SpringLayout.SOUTH, panel_6, 0, SpringLayout.SOUTH, cardGetStarted);
+		sl_panelCards.putConstraint(SpringLayout.EAST, panel_6, 0, SpringLayout.EAST, panel_5);
+		panelCards.add(panel_6);
+		SpringLayout sl_panel_6 = new SpringLayout();
+		panel_6.setLayout(sl_panel_6);
+		
+		JLabel lblShit = new JLabel("Status");
+		sl_panel_6.putConstraint(SpringLayout.NORTH, lblShit, 10, SpringLayout.NORTH, panel_6);
+		sl_panel_6.putConstraint(SpringLayout.WEST, lblShit, 10, SpringLayout.WEST, panel_6);
+		lblShit.setFont(new Font("Yu Gothic Light", Font.PLAIN, 64));
+		panel_6.add(lblShit);
+		
+		lblmsInterval = new JLabel("50ms Interval");
+		sl_panel_6.putConstraint(SpringLayout.NORTH, lblmsInterval, 6, SpringLayout.SOUTH, lblShit);
+		sl_panel_6.putConstraint(SpringLayout.WEST, lblmsInterval, 0, SpringLayout.WEST, lblShit);
+		lblmsInterval.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_6.add(lblmsInterval);
+		
+		lblkSize = new JLabel("3.2k Size");
+		sl_panel_6.putConstraint(SpringLayout.NORTH, lblkSize, 6, SpringLayout.SOUTH, lblmsInterval);
+		sl_panel_6.putConstraint(SpringLayout.WEST, lblkSize, 0, SpringLayout.WEST, lblShit);
+		lblkSize.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_6.add(lblkSize);
+		
+		lblTotal = new JLabel("Total");
+		sl_panel_6.putConstraint(SpringLayout.NORTH, lblTotal, 6, SpringLayout.SOUTH, lblkSize);
+		sl_panel_6.putConstraint(SpringLayout.WEST, lblTotal, 0, SpringLayout.WEST, lblShit);
+		lblTotal.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_6.add(lblTotal);
 		
 		performance = new JPanel();
 		tabbedPane.addTab("Monitor", new ImageIcon(Application.class.getResource("/com/glacialrush/react/tab-performance.png")), performance, null);
@@ -331,11 +425,93 @@ public class Application
 		lblSpms_1.setFont(new Font("Yu Gothic Light", Font.PLAIN, 14));
 		panel_2.add(lblSpms_1);
 		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_3.setBackground(Color.WHITE);
+		sl_panel_1.putConstraint(SpringLayout.NORTH, panel_3, 6, SpringLayout.SOUTH, panel_2);
+		sl_panel_1.putConstraint(SpringLayout.WEST, panel_3, 0, SpringLayout.WEST, panel_2);
+		sl_panel_1.putConstraint(SpringLayout.SOUTH, panel_3, 241, SpringLayout.SOUTH, panel_2);
+		sl_panel_1.putConstraint(SpringLayout.EAST, panel_3, 0, SpringLayout.EAST, panel_2);
+		panel_1.add(panel_3);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_4.setBackground(Color.WHITE);
+		sl_panel_1.putConstraint(SpringLayout.NORTH, panel_4, 10, SpringLayout.NORTH, panel_1);
+		sl_panel_1.putConstraint(SpringLayout.WEST, panel_4, 6, SpringLayout.EAST, panel_2);
+		sl_panel_1.putConstraint(SpringLayout.SOUTH, panel_4, 0, SpringLayout.SOUTH, panel_3);
+		SpringLayout sl_panel_3 = new SpringLayout();
+		panel_3.setLayout(sl_panel_3);
+		
+		JLabel lblWorld = new JLabel("World");
+		sl_panel_3.putConstraint(SpringLayout.NORTH, lblWorld, 10, SpringLayout.NORTH, panel_3);
+		sl_panel_3.putConstraint(SpringLayout.WEST, lblWorld, 10, SpringLayout.WEST, panel_3);
+		lblWorld.setFont(new Font("Yu Gothic Light", Font.PLAIN, 64));
+		panel_3.add(lblWorld);
+		
+		lblEntities = new JLabel("Entities");
+		sl_panel_3.putConstraint(SpringLayout.WEST, lblEntities, 0, SpringLayout.WEST, lblWorld);
+		sl_panel_3.putConstraint(SpringLayout.EAST, lblEntities, 130, SpringLayout.EAST, lblWorld);
+		lblEntities.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_3.add(lblEntities);
+		
+		lblDrops = new JLabel("Drops");
+		sl_panel_3.putConstraint(SpringLayout.NORTH, lblDrops, 175, SpringLayout.NORTH, panel_3);
+		sl_panel_3.putConstraint(SpringLayout.WEST, lblDrops, 10, SpringLayout.WEST, panel_3);
+		sl_panel_3.putConstraint(SpringLayout.EAST, lblDrops, -110, SpringLayout.EAST, panel_3);
+		sl_panel_3.putConstraint(SpringLayout.SOUTH, lblEntities, -6, SpringLayout.NORTH, lblDrops);
+		lblDrops.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_3.add(lblDrops);
+		
+		lblChunks = new JLabel("Chunks");
+		sl_panel_3.putConstraint(SpringLayout.NORTH, lblChunks, 45, SpringLayout.NORTH, lblWorld);
+		sl_panel_3.putConstraint(SpringLayout.WEST, lblChunks, 6, SpringLayout.EAST, lblWorld);
+		lblChunks.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_3.add(lblChunks);
+		sl_panel_1.putConstraint(SpringLayout.EAST, panel_4, 296, SpringLayout.EAST, panel_2);
+		panel_1.add(panel_4);
+		SpringLayout sl_panel_4 = new SpringLayout();
+		panel_4.setLayout(sl_panel_4);
+		
+		JLabel lblProblems = new JLabel("Problems");
+		sl_panel_4.putConstraint(SpringLayout.NORTH, lblProblems, 10, SpringLayout.NORTH, panel_4);
+		sl_panel_4.putConstraint(SpringLayout.WEST, lblProblems, 10, SpringLayout.WEST, panel_4);
+		lblProblems.setFont(new Font("Yu Gothic Light", Font.PLAIN, 64));
+		panel_4.add(lblProblems);
+		
+		lblProblemstub = new JLabel("ProblemStub");
+		sl_panel_4.putConstraint(SpringLayout.NORTH, lblProblemstub, 6, SpringLayout.SOUTH, lblProblems);
+		sl_panel_4.putConstraint(SpringLayout.WEST, lblProblemstub, 10, SpringLayout.WEST, panel_4);
+		lblProblemstub.setFont(new Font("Yu Gothic Light", Font.PLAIN, 24));
+		panel_4.add(lblProblemstub);
+		
+		lblAgo = new JLabel("Ago");
+		sl_panel_4.putConstraint(SpringLayout.NORTH, lblAgo, 4, SpringLayout.SOUTH, lblProblemstub);
+		sl_panel_4.putConstraint(SpringLayout.WEST, lblAgo, 0, SpringLayout.WEST, lblProblems);
+		lblAgo.setFont(new Font("Yu Gothic Light", Font.BOLD, 14));
+		panel_4.add(lblAgo);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		sl_panel_4.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, lblAgo);
+		sl_panel_4.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, lblProblems);
+		sl_panel_4.putConstraint(SpringLayout.SOUTH, scrollPane, 336, SpringLayout.SOUTH, lblAgo);
+		sl_panel_4.putConstraint(SpringLayout.EAST, scrollPane, -3, SpringLayout.EAST, lblProblems);
+		panel_4.add(scrollPane);
+		
+		txtrProblem = new JTextArea();
+		txtrProblem.setFont(new Font("Yu Gothic Light", Font.PLAIN, 18));
+		txtrProblem.setEditable(false);
+		txtrProblem.setLineWrap(true);
+		txtrProblem.setWrapStyleWord(true);
+		txtrProblem.setText("problem");
+		scrollPane.setViewportView(txtrProblem);
+		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.menu);
 		tabbedPane_1.addTab("Graphs", null, panel, null);
 		panel.setLayout(new MigLayout("", "[grow][grow]", "[][grow][][grow]"));
-		
 		
 		JLabel lblNewLabel = new JLabel("Ticks Per Second");
 		lblNewLabel.setFont(new Font("Yu Gothic Light", Font.PLAIN, 23));
@@ -399,10 +575,16 @@ public class Application
 	
 	public static void update(JSONObject data)
 	{
+		ns = System.nanoTime() - lns;
+		lns = System.nanoTime();
+		tot++;
+		
 		if(data == null)
 		{
 			return;
 		}
+		
+		sz = data.toString().getBytes(Charset.defaultCharset()).length;
 		
 		try
 		{
@@ -421,6 +603,17 @@ public class Application
 					}
 				}
 			}
+			
+			stubs = new GList<Stub>();
+			
+			for(Object i : data.getJSONArray("issues"))
+			{
+				JSONObject o = (JSONObject) i;
+				stubs.add(new Stub(o.getString("title"), o.getString("text"), o.getString("ago")));
+			}
+			
+			size = data.getInt("size");
+			username = data.getString("username");
 			
 			instance.process();
 		}
@@ -457,9 +650,33 @@ public class Application
 		
 		lblRunningVersion.setText(serverVersion);
 		lblTps.setText(Format.f(cache.latest("sample-ticks-per-second"), 2) + " TPS (" + Format.pc(cache.latest("sample-stability")) + ")");
-		lblMem.setText(Format.mem(cache.latest("sample-memory-used").longValue()) + " Used (" + Format.pc(cache.latest("sample-memory-used") / (double)maxMem) + ")");
+		lblMem.setText(Format.mem(cache.latest("sample-memory-used").longValue()) + " Used (" + Format.pc(cache.latest("sample-memory-used") / (double) maxMem) + ")");
 		lblMahs.setText(Format.mem(cache.latest("sample-memory-allocations-per-second").longValue()) + "/s");
 		lblSpms_1.setText(Format.f(cache.latest("sample-memory-sweep-frequency")) + " SPMS");
+		lblChunks.setText(Format.f(cache.latest("sample-chunks-loaded")) + " Chunks");
+		lblEntities.setText(Format.f(cache.latest("sample-entities")) + " Entities");
+		lblDrops.setText(Format.f(cache.latest("sample-drops")) + " Drops");
+		lblmsInterval.setText(Format.ms(ns, 1) + " Interval");
+		lblkSize.setText(Format.f(sz) + " Bytes");
+		lblTotal.setText(Format.f(tot) + " Total");
+		lblUsername.setText(username);
+		lblConnectedWith.setText("Connected with " + (size - 1) + " Others.");
+		
+		if(!stubs.isEmpty())
+		{
+			Stub s = stubs.get(0);
+			lblProblemstub.setText(s.getTitle());
+			txtrProblem.setText(s.getText());
+			lblAgo.setText(s.getAgo());
+			lblAgo.setVisible(true);
+		}
+		
+		else
+		{
+			lblAgo.setVisible(false);
+			lblProblemstub.setText("No Issues");
+			txtrProblem.setText("There is no issue on the server at the moment. Once an issue happens, the latest issue will show up here.");
+		}
 	}
 	
 	public static void popup(String title, String text)
