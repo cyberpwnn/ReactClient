@@ -7,6 +7,12 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -18,6 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 
+import com.glacialrush.react.json.JSONObject;
+
 public class Login
 {
 	private JFrame frmReactClient;
@@ -26,6 +34,7 @@ public class Login
 	private JTextField username;
 	private JTextField password;
 	private JProgressBar progressBar;
+	private JSONObject config;
 	public static Login instance;
 	private static boolean app = false;
 	
@@ -58,6 +67,51 @@ public class Login
 	 */
 	public Login()
 	{
+		File f = new File(new File(".").getAbsolutePath(), "React");
+		f.mkdirs();
+		System.out.println("Loading Config at: " + f.getAbsolutePath());
+		config = new JSONObject();
+		config.put("address", "localhost");
+		config.put("port", "8118");
+		config.put("username", "cyberpwn");
+		config.put("password", "react123");
+		File c = new File(f, "login.dat");
+		
+		if(c.exists())
+		{
+			try
+			{
+				FileInputStream fin = new FileInputStream(c);
+				DataInputStream dis = new DataInputStream(fin);
+				String json = dis.readUTF();
+				dis.close();
+				config = new JSONObject(json);
+			}
+			
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		else
+		{
+			try
+			{
+				c.createNewFile();
+				FileOutputStream fos = new FileOutputStream(c);
+				DataOutputStream dos = new DataOutputStream(fos);
+				dos.writeUTF(config.toString());
+				dos.flush();
+				dos.close();
+			}
+			
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
 		initialize();
 	}
 	
@@ -100,7 +154,7 @@ public class Login
 		sl_panel.putConstraint(SpringLayout.NORTH, address, 6, SpringLayout.SOUTH, lblNewLabel);
 		sl_panel.putConstraint(SpringLayout.WEST, address, 49, SpringLayout.WEST, panel);
 		address.setFont(new Font("Yu Gothic", Font.PLAIN, 13));
-		address.setText("localhost");
+		address.setText(config.getString("address"));
 		address.setBackground(Color.GRAY);
 		address.setForeground(Color.WHITE);
 		panel.add(address);
@@ -108,7 +162,7 @@ public class Login
 		
 		port = new JTextField();
 		sl_panel.putConstraint(SpringLayout.WEST, port, 6, SpringLayout.EAST, address);
-		port.setText("8118");
+		port.setText(config.getString("port"));
 		port.setBackground(Color.GRAY);
 		port.setForeground(Color.WHITE);
 		port.setFont(new Font("Yu Gothic", Font.PLAIN, 13));
@@ -138,7 +192,7 @@ public class Login
 		username.setForeground(Color.WHITE);
 		username.setFont(new Font("Yu Gothic", Font.PLAIN, 13));
 		sl_panel.putConstraint(SpringLayout.NORTH, username, 6, SpringLayout.SOUTH, lblLogin);
-		username.setText("cyberpwn");
+		username.setText(config.getString("username"));
 		panel.add(username);
 		username.setColumns(10);
 		
@@ -147,7 +201,7 @@ public class Login
 		password.setFont(new Font("Yu Gothic", Font.PLAIN, 13));
 		password.setBackground(Color.GRAY);
 		password.setForeground(Color.WHITE);
-		password.setText("react123");
+		password.setText(config.getString("password"));
 		sl_panel.putConstraint(SpringLayout.NORTH, password, 52, SpringLayout.SOUTH, port);
 		sl_panel.putConstraint(SpringLayout.WEST, password, 6, SpringLayout.EAST, username);
 		panel.add(password);
@@ -167,7 +221,7 @@ public class Login
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				doConnect();
+				doConnect(remember.isSelected());
 			}
 		});
 		
@@ -191,12 +245,41 @@ public class Login
 		panel.add(progressBar);
 	}
 	
-	public void doConnect()
+	public void doConnect(boolean save)
 	{
 		String address = this.address.getText();
 		Integer port = Integer.valueOf(this.port.getText());
 		String username = this.username.getText();
 		String password = this.password.getText();
+		
+		if(save)
+		{
+			config.put("address", address);
+			config.put("port", port.toString());
+			config.put("username", username);
+			config.put("password", password);
+			File f = new File(new File(".").getAbsolutePath(), "React");
+			System.out.println("Saving Config at: " + f.getAbsolutePath());
+			File c = new File(f, "login.dat");
+			
+			try
+			{
+				c.delete();
+				c.createNewFile();
+				FileOutputStream fos = new FileOutputStream(c);
+				DataOutputStream dos = new DataOutputStream(fos);
+				dos.writeUTF(config.toString());
+				dos.flush();
+				dos.close();
+			}
+			
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		
 		progressBar.setVisible(true);
 		progressBar.setIndeterminate(true);
 		ClientThread t = new ClientThread(address, port, username, password);
