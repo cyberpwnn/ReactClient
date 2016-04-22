@@ -63,12 +63,14 @@ public class ClientThread extends Thread
 		
 		catch(IOException e)
 		{
+			Login.error("Failed to Connect", "Could not connect to the server.", false);
 			e.printStackTrace();
 			return;
 		}
 		
 		catch(Exception e)
 		{
+			Login.error("Failed to Connect", "Could not connect to the server.", false);
 			e.printStackTrace();
 			return;
 		}
