@@ -74,6 +74,19 @@ public class Format
 		}
 	}
 	
+	public static String dps(long b)
+	{
+		if(b < 1024)
+		{
+			return f(b) + " B/s";
+		}
+		
+		else
+		{
+			return fd(((double)b / (double)1024), 1) + " KB/s";
+		}
+	}
+	
 	public static String f(long i)
 	{
 		instantiate();
