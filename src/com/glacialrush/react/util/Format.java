@@ -51,6 +51,16 @@ public class Format
 		return codeName;
 	}
 	
+	public static String ms(long ns)
+	{
+		return Format.f(ns / 1000000) + " ms";
+	}
+	
+	public static String ms(long ns, int p)
+	{
+		return Format.fd((double)ns / 1000000.0, p) + " ms";
+	}
+	
 	public static String mem(long mb)
 	{
 		if(mb < 1024)
