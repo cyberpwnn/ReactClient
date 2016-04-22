@@ -657,7 +657,7 @@ public class Application
 		lblEntities.setText(Format.f(cache.latest("sample-entities")) + " Entities");
 		lblDrops.setText(Format.f(cache.latest("sample-drops")) + " Drops");
 		lblmsInterval.setText(Format.ms(ns, 1) + " Interval");
-		lblkSize.setText(Format.f(sz) + " Bytes");
+		lblkSize.setText(Format.f(sz) + " Bytes" + " (" + Format.dps((sz / ((ns/1000000))) * 1000) + ")");
 		lblTotal.setText(Format.f(tot) + " Total");
 		lblUsername.setText(username);
 		lblConnectedWith.setText("Connected with " + (size - 1) + " Others.");
