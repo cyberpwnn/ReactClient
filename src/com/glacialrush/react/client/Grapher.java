@@ -27,7 +27,7 @@ public class Grapher extends JComponent
 	{
 		this.width = width;
 		this.color = color;
-		this.max = max;
+		this.max = max + 1;
 		this.height = height;
 		this.data = data;
 		this.rcColor = false;
@@ -44,7 +44,7 @@ public class Grapher extends JComponent
 		
 		if(p == height)
 		{
-			p = height - 10;
+			p = height - 40;
 		}
 		
 		return p;
@@ -54,7 +54,7 @@ public class Grapher extends JComponent
 	{
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
-		g.setStroke(new BasicStroke(9.2f));
+		g.setStroke(new BasicStroke(3.2f));
 		
 		if(data.isEmpty())
 		{
@@ -129,7 +129,7 @@ public class Grapher extends JComponent
 			mv += 30;
 		}
 		
-		if(fmv > 900000)
+		if(fmv > 100000)
 		{
 			fmv /= 1000000.0;
 		}
