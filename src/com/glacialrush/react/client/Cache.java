@@ -10,7 +10,7 @@ public class Cache
 	
 	public Cache()
 	{
-		size = 512;
+		size = 256;
 		data = new GMap<String, GList<Double>>();
 	}
 	
