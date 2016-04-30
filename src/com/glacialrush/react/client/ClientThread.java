@@ -44,6 +44,7 @@ public class ClientThread extends Thread
 			o.writeInt(Version.C);
 			o.writeUTF(username);
 			o.writeUTF(password);
+			o.writeBoolean(false);
 			o.flush();
 			
 			String response = i.readUTF();
