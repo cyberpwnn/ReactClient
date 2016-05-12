@@ -1,7 +1,5 @@
-# ReactClient
+# ReactClient [Download](https://github.com/cyberpwnn/ReactClient/releases)
 A Client application for React Servers
-
-### [Download](https://github.com/cyberpwnn/ReactClient/releases)
 
 [![Java Profiler][2]][1]
   [1]: http://www.ej-technologies.com/products/jprofiler/overview.html
