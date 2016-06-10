@@ -3,7 +3,7 @@ package com.glacialrush.react.util;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public class Format
+public class F
 {
 	private static NumberFormat NF;
 	private static DecimalFormat DF;
@@ -51,16 +51,6 @@ public class Format
 		return codeName;
 	}
 	
-	public static String ms(long ns)
-	{
-		return Format.f(ns / 1000000) + " ms";
-	}
-	
-	public static String ms(long ns, int p)
-	{
-		return Format.fd((double)ns / 1000000.0, p) + " ms";
-	}
-	
 	public static String mem(long mb)
 	{
 		if(mb < 1024)
@@ -70,20 +60,7 @@ public class Format
 		
 		else
 		{
-			return f(((double)mb / (double)1024), 1) + " GB";
-		}
-	}
-	
-	public static String dps(long b)
-	{
-		if(b < 1024)
-		{
-			return f(b) + " B/s";
-		}
-		
-		else
-		{
-			return fd(((double)b / (double)1024), 1) + " KB/s";
+			return f(((double) mb / (double) 1024), 1) + " GB";
 		}
 	}
 	
@@ -185,7 +162,7 @@ public class Format
 	
 	public static String pc(int i, int of, int p)
 	{
-		return f(100.0 * (((double)i) / ((double)of)), p) + "%";
+		return f(100.0 * (((double) i) / ((double) of)), p) + "%";
 	}
 	
 	public static String pc(int i, int of)
@@ -195,11 +172,31 @@ public class Format
 	
 	public static String pc(long i, long of, int p)
 	{
-		return f(100.0 * (((double)i) / ((double)of)), p) + "%";
+		return f(100.0 * (((double) i) / ((double) of)), p) + "%";
 	}
 	
 	public static String pc(long i, long of)
 	{
 		return pc(i, of, 0);
+	}
+	
+	public static String msSeconds(long ms)
+	{
+		return f((double) ms / 1000.0);
+	}
+	
+	public static String msSeconds(long ms, int p)
+	{
+		return f((double) ms / 1000.0, p);
+	}
+	
+	public static String nsMs(long ns)
+	{
+		return f((double) ns / 1000000.0);
+	}
+	
+	public static String nsMs(long ns, int p)
+	{
+		return f((double) ns / 1000000.0, p);
 	}
 }

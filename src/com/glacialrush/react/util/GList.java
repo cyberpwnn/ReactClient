@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class GList<T> extends ArrayList<T>
 {
 	private static final long serialVersionUID = 4480457702775755227L;
@@ -69,15 +67,6 @@ public class GList<T> extends ArrayList<T>
 		}
 		
 		return v;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public GList(String strings)
-	{
-		for(String i : StringUtils.split(strings, ','))
-		{
-			add((T)i);
-		}
 	}
 	
 	public GList<T> shuffle()
@@ -272,7 +261,7 @@ public class GList<T> extends ArrayList<T>
 		
 		return c;
 	}
-
+	
 	public GList<T> qdel(T t)
 	{
 		remove(t);
