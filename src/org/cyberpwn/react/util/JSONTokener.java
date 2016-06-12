@@ -1,4 +1,4 @@
-package com.glacialrush.react.json;
+package org.cyberpwn.react.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

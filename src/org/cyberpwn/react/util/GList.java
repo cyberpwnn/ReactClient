@@ -1,4 +1,4 @@
-package com.glacialrush.react.util;
+package org.cyberpwn.react.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

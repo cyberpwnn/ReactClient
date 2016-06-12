@@ -1,4 +1,4 @@
-package com.glacialrush.react.json;
+package org.cyberpwn.react.util;
 
 /*
 Copyright (c) 2008 JSON.org
