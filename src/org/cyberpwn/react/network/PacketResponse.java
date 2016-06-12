@@ -13,6 +13,16 @@ public class PacketResponse
 		this.js = new JSONObject();
 	}
 	
+	public PacketResponse(JSONObject js)
+	{
+		this.js = js;
+	}
+	
+	public JSONObject getJSON()
+	{
+		return js;
+	}
+	
 	public void put(String s, PacketResponseType o)
 	{
 		js.put(s, o.toString());
