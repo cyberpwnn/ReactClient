@@ -1,5 +1,12 @@
 package org.cyberpwn.react.network;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
 import org.cyberpwn.react.util.JSONObject;
@@ -11,11 +18,107 @@ public class Network
 	public Network()
 	{
 		this.servers = new GMap<String, NetworkedServer>();
+		
+		File f = new File(new File(".").getAbsolutePath(), "react-data");
+		f.mkdirs();
+		System.out.println("Loading Config at: " + f.getAbsolutePath());
+		File c = new File(f, "react.json");
+		
+		if(c.exists())
+		{
+			try
+			{
+				JSONObject jso = new JSONObject(readFile(c.getPath()));
+				
+				if(jso != null)
+				{
+					fromJson(jso);
+				}
+			}
+			
+			catch(Exception e)
+			{
+				System.out.println("Appears to be a new Config.");
+				
+				try
+				{
+					save();
+				} 
+				
+				catch(IOException e1)
+				{
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		else
+		{
+			try
+			{
+				save();
+			} 
+
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void save() throws IOException
+	{
+		File f = new File(new File(".").getAbsolutePath(), "react-data");
+		f.mkdirs();
+		System.out.println("Saving Config at: " + f.getAbsolutePath());
+		File c = new File(f, "react.json");
+		
+		if(!c.exists())
+		{
+			c.createNewFile();
+		}
+		
+		PrintWriter writer = new PrintWriter(c.getPath(), "UTF-8");
+		writer.println(toJson().toString());
+		writer.close();
+	}
+	
+	public static String readFile(String filename)
+	{
+		String result = "";
+		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			StringBuilder sb = new StringBuilder();
+			String line = br.readLine();
+			
+			while(line != null)
+			{
+				sb.append(line);
+				line = br.readLine();
+			}
+			
+			result = sb.toString();
+			br.close();
+		} 
+		
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	public Network(JSONObject network)
 	{
 		fromJson(network);
+	}
+	
+	public GList<NetworkedServer> getServers()
+	{
+		return servers.v();
 	}
 	
 	public void fromJson(JSONObject network)
@@ -45,5 +148,26 @@ public class Network
 		js.put("servers", jsa);
 		
 		return js;
+	}
+
+	public void addConnection(String name, String address, int port, String username, String password)
+	{
+		NetworkedServer ns = new NetworkedServer(name, username, password, address, port);
+		servers.put(name, ns);
+		
+		try
+		{
+			save();
+		} 
+		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteServer(NetworkedServer ns)
+	{
+		servers.remove(ns.getName());
 	}
 }
