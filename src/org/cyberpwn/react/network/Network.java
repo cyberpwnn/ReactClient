@@ -8,7 +8,17 @@ public class Network
 {
 	private GMap<String, NetworkedServer> servers;
 	
+	public Network()
+	{
+		this.servers = new GMap<String, NetworkedServer>();
+	}
+	
 	public Network(JSONObject network)
+	{
+		fromJson(network);
+	}
+	
+	public void fromJson(JSONObject network)
 	{
 		this.servers = new GMap<String, NetworkedServer>();
 		
