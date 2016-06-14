@@ -1,5 +1,6 @@
 package org.cyberpwn.react.network;
 
+import org.cyberpwn.react.ServerTab;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
 import org.cyberpwn.react.util.JSONObject;
@@ -12,6 +13,7 @@ public class NetworkedServer
 	private String address;
 	private Integer port;
 	private GMap<String, Double> sample;
+	private ServerTab tab;
 	
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
 	{
@@ -19,6 +21,7 @@ public class NetworkedServer
 		this.username = username;
 		this.password = password;
 		this.address = address;
+		this.tab = null;
 		this.port = port;
 		this.sample = new GMap<String, Double>();
 	}
@@ -30,6 +33,7 @@ public class NetworkedServer
 		this.password = js.getString("password");
 		this.address = js.getString("address");
 		this.port = js.getInt("port");
+		this.tab = null;
 		this.sample = new GMap<String, Double>();
 	}
 	
@@ -118,5 +122,15 @@ public class NetworkedServer
 	public void setSample(GMap<String, Double> sample)
 	{
 		this.sample = sample;
+	}
+
+	public ServerTab getTab()
+	{
+		return tab;
+	}
+
+	public void setTab(ServerTab tab)
+	{
+		this.tab = tab;
 	}
 }
