@@ -38,14 +38,25 @@ public class ServerTab
 	private JLabel lblOnline;
 	private JLabel lblmsPing;
 	
-	private JPanel TPS;
-	private Grapher GTPS;
+	private Grapher TPS;
 	private GList<Double> DTPS;
+	
+	private Grapher MEM;
+	private GList<Double> DMEM;
+	
+	private Grapher GC;
+	private GList<Double> DGC;
+	
+	private Grapher MAH;
+	private GList<Double> DMAH;
 	
 	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tabbedPane)
 	{
 		this.ns = server;
 		this.DTPS = new GList<Double>().qadd(20.0);
+		this.DMEM = new GList<Double>().qadd(128.0);
+		this.DGC = new GList<Double>().qadd(1.0);
+		this.DMAH = new GList<Double>().qadd(9.0);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")), panel, null);
@@ -137,12 +148,10 @@ public class ServerTab
 		lblTps.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_7.add(lblTps, "cell 1 0");
 		
-		TPS = new JPanel();
+		TPS = new Grapher(20, Color.CYAN, new GList<Double>().qadd(1.0));
 		TPS.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		TPS.setBackground(Color.DARK_GRAY);
 		panel_7.add(TPS, "cell 0 1 2 2,grow");
-		GTPS = new Grapher(TPS.getWidth(), TPS.getHeight(), 20, Color.CYAN, new GList<Double>().qadd(1.0));
-		TPS.add(GTPS);
 		
 		JPanel panel_13 = new JPanel();
 		tabbedPane_2.addTab("Memory", null, panel_13, null);
@@ -162,10 +171,10 @@ public class ServerTab
 		lblMbUsed.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_14.add(lblMbUsed, "cell 1 0");
 		
-		JPanel panel_9 = new JPanel();
-		panel_9.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_9.setBackground(Color.DARK_GRAY);
-		panel_14.add(panel_9, "cell 0 1 2 1,grow");
+		MEM = new Grapher(400, Color.CYAN, new GList<Double>().qadd(1.0));
+		MEM.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		MEM.setBackground(Color.DARK_GRAY);
+		panel_14.add(MEM, "cell 0 1 2 1,grow");
 		
 		JPanel panel_16 = new JPanel();
 		panel_16.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -181,10 +190,10 @@ public class ServerTab
 		lblGcminute.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_16.add(lblGcminute, "cell 1 0");
 		
-		JPanel panel_11 = new JPanel();
-		panel_11.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_11.setBackground(Color.DARK_GRAY);
-		panel_16.add(panel_11, "cell 0 1 2 1,grow");
+		GC = new Grapher(1200, Color.CYAN, new GList<Double>().qadd(1.0));
+		GC.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		GC.setBackground(Color.DARK_GRAY);
+		panel_16.add(GC, "cell 0 1 2 1,grow");
 		
 		JPanel panel_15 = new JPanel();
 		panel_15.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -200,10 +209,10 @@ public class ServerTab
 		lblMahs.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_15.add(lblMahs, "cell 1 0");
 		
-		JPanel panel_17 = new JPanel();
-		panel_17.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_17.setBackground(Color.DARK_GRAY);
-		panel_15.add(panel_17, "cell 0 1 2 1,grow");
+		MAH = new Grapher(1, Color.CYAN, new GList<Double>().qadd(1.0));
+		MAH.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		MAH.setBackground(Color.DARK_GRAY);
+		panel_15.add(MAH, "cell 0 1 2 1,grow");
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane_1.addTab("Actions", null, panel_4, null);
@@ -251,10 +260,10 @@ public class ServerTab
 		lblNewLabel_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_18.add(lblNewLabel_1, "cell 0 1");
 	}
-
+	
 	public void push(GMap<String, Double> sample)
 	{
-		lblUsingSpigot.setText("Using " + ns.getVersionBukkit());
+		lblUsingSpigot.setText("Using " + ns.getVersion());
 		lblTps.setText(F.f(sample.get("tps"), 2) + " TPS (" + F.pc(sample.get("stability"), 0) + " Stable)");
 		lblGcminute.setText(F.f(sample.get("spms")) + " GC/Minute");
 		lblMahs.setText(F.f(sample.get("mah/s")) + " MAH/s");
@@ -262,32 +271,62 @@ public class ServerTab
 		lblOnline.setText(F.f(sample.get("plr")) + " Players Online");
 		lblmsPing.setText(F.f(sample.get("plg")) + " Loaded Plugins");
 		
-		DTPS.add(sample.get("tps"));
-		
-		if(DTPS.size() > 64)
+		if(MAH.getMax() < sample.get("mah/s"))
 		{
-			DTPS.remove(0);
+			MAH.setMax(sample.get("mah/s").intValue());
 		}
 		
-		GTPS.setWidth(TPS.getWidth());
-		GTPS.setHeight(TPS.getHeight());
-		GTPS.setData(DTPS);
-		GTPS.repaint();
+		DTPS.add(sample.get("tps"));
+		
+		if(DTPS.size() > TPS.getWidth())
+		{
+			while(DTPS.size() > TPS.getWidth())
+			{
+				DTPS.remove(0);
+			}
+		}
+		
+		TPS.setData(DTPS);
 		TPS.repaint();
+		
+		DMEM.add(sample.get("mem"));
+		
+		if(DMEM.size() > MEM.getWidth())
+		{
+			while(DMEM.size() > MEM.getWidth())
+			{
+				DMEM.remove(0);
+			}
+		}
+		
+		MEM.setMax(sample.get("memory-max").intValue());
+		MEM.setData(DMEM);
+		MEM.repaint();
+		
+		DGC.add(sample.get("spms"));
+		
+		if(DGC.size() > GC.getWidth())
+		{
+			while(DGC.size() > GC.getWidth())
+			{
+				DGC.remove(0);
+			}
+		}
+		
+		GC.setData(DGC);
+		GC.repaint();
+		
+		DMAH.add(sample.get("mah/s"));
+		
+		if(DMAH.size() > MAH.getWidth())
+		{
+			while(DMAH.size() > MAH.getWidth())
+			{
+				DMAH.remove(0);
+			}
+		}
+		
+		MAH.setData(DMAH);
+		MAH.repaint();
 	}
-	
-	/*
-			>> liq/s : 0.0
-			>> tnt/s : 0.0
-			>> drops : 31.0
-			>> hist : 1.0
-			>> chk/s : 10.6
-			>> rct : 501220.2773345846
-			>> red/s : 0.0
-			>> chunks : 0.0
-			>> mb/p : 29.857142857142858
-			>> ents : 190.0
-			>> cgen/s : 2.0
-			>> chunkmem : 0.0
-	 */
 }

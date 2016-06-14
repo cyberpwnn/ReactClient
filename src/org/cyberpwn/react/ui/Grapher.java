@@ -5,157 +5,89 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.Path2D;
 
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-import org.cyberpwn.react.util.F;
 import org.cyberpwn.react.util.GList;
 
-public class Grapher extends JComponent
+public class Grapher extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
 	private int min;
 	private boolean rcColor;
 	private int max;
 	private Color color;
 	private GList<Double> data;
 	
-	public Grapher(int width, int height, int max, Color color, GList<Double> data)
+	public Grapher(int max, Color color, GList<Double> data)
 	{
-		this.width = width;
 		this.color = color;
-		this.max = max + 1;
-		this.height = height;
+		this.max = max;
 		this.data = data;
 		this.rcColor = false;
 	}
 	
-	public double pos(double v)
+	public int pos(Double double1)
 	{
-		double p = (double) height - ((double) height * (double) (v / (double) max));
+		int y = getHeight() - (int) (((double)double1 / (double) max) * (double)getHeight());
 		
-		if(p == 0)
+		if(y <= 0)
 		{
-			p = 10;
+			y = 20;
 		}
 		
-		if(p == height)
+		if(y >= getHeight())
 		{
-			p = height - 1;
+			y = getHeight() - 20;
 		}
 		
-		return p;
+		return y;
 	}
 	
 	public void paintComponent(Graphics gg)
 	{
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
-		g.setStroke(new BasicStroke(2.2f));
-		
+		g.setStroke(new BasicStroke(1.2f));
+				
 		if(data.isEmpty())
 		{
 			return;
 		}
 		
-		if(color == null)
-		{
-			double pc = (double) (data.get(data.size() - 1) / (double) max);
-			
-			if(rcColor)
-			{
-				pc = 1.0 - pc;
-			}
-			
-			if(pc > 1.0)
-			{
-				pc = 1.0;
-			}
-			
-			if(pc < 0.0)
-			{
-				pc = 0.0;
-			}
-			
-			g.setColor(new Color(255 - (int)(255.0 * pc), (int)(160.0 * pc), (int)(40.0 * pc)));
-		}
+		g.setColor(color);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);	
+		int x = 0;
+		int ly = 0;
 		
-		else
+		for(int i = x; i < getWidth(); i++)
 		{
-			g.setColor(color);
-		}
-		
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		Path2D.Double p = new Path2D.Double();
-		p.setWindingRule(Path2D.WIND_NON_ZERO);
-		double step = (double) width / (double) data.size();
-		double x = 0;
-		GList<Double> d = data.copy();
-		p.moveTo(x, pos(d.pop()));
-		double mv = 0;
-		double fmv = 0;
-		
-		while(!d.isEmpty())
-		{
-			if(d.size() >= 3)
+			if(data.size() > i)
 			{
-				double a = pos(d.pop());
-				double b = pos(d.pop());
-				double dv = d.pop();
-				double c = pos(dv);
-				mv = c;
-				fmv = dv;
+				g.drawRect(i, pos(data.get(i)), 1, 1);
 				
-				p.curveTo(x + step, a, x + step + step, b, x + step + step + step, c);
-				x = x + (step * 3);
-			}
-			
-			else
-			{
-				break;
-			}
-		}
-		
-		if(mv > height - 100)
-		{
-			mv -= 30;
-		}
+				if(i > 0)
+				{
+					if(pos(data.get(i)) > ly)
+					{
+						for(int j = ly; j < pos(data.get(i)); j++)
+						{
+							g.drawRect(i, j, 1, 1);
+						}
+					}
+					
+					else if(pos(data.get(i)) < ly)
+					{
+						for(int j = ly; j > pos(data.get(i)); j--)
+						{
+							g.drawRect(i, j, 1, 1);
+						}
+					}
+				}
 				
-		else
-		{
-			mv += 30;
+				ly = pos(data.get(i));
+			}
 		}
-		
-		if(fmv > 100000)
-		{
-			fmv /= 1000000.0;
-		}
-		
-		g.drawString(F.f(fmv, 2), (int)width - 50, (int)mv);
-		g.draw(p);
-	}
-	
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	public void setWidth(int width)
-	{
-		this.width = width;
-	}
-	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-	public void setHeight(int height)
-	{
-		this.height = height;
 	}
 	
 	public int getMin()
@@ -187,22 +119,22 @@ public class Grapher extends JComponent
 	{
 		this.data = data;
 	}
-
+	
 	public boolean isRcColor()
 	{
 		return rcColor;
 	}
-
+	
 	public void setRcColor(boolean rcColor)
 	{
 		this.rcColor = rcColor;
 	}
-
+	
 	public Color getColor()
 	{
 		return color;
 	}
-
+	
 	public void setColor(Color color)
 	{
 		this.color = color;

@@ -67,7 +67,7 @@ public class ReactClient
 		
 		this.network = new Network();
 		initialize();
-		ns = new NetworkScheduler(network.getServers(), 500);
+		ns = new NetworkScheduler(network.getServers(), 50);
 		ns.start();
 	}
 	
