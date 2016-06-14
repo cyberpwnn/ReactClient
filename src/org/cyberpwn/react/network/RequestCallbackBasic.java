@@ -2,12 +2,12 @@ package org.cyberpwn.react.network;
 
 import org.cyberpwn.react.util.GMap;
 
-public class RequestCallback implements Runnable
+public class RequestCallbackBasic implements Runnable
 {
-	private GMap<String, Double> data;
+	private GMap<String, String> data;
 	private boolean ok;
 	
-	public void run(GMap<String, Double> data, boolean ok)
+	public void run(GMap<String, String> data, boolean ok)
 	{
 		this.data = data;
 		this.ok = ok;
@@ -20,7 +20,7 @@ public class RequestCallback implements Runnable
 		
 	}
 
-	public GMap<String, Double> getData()
+	public GMap<String, String> getData()
 	{
 		return data;
 	}

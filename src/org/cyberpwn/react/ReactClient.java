@@ -25,6 +25,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyberpwn.react.network.Network;
+import org.cyberpwn.react.network.NetworkScheduler;
 import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.ui.AbstractTabRenderer;
 import org.cyberpwn.react.ui.JXTabbedPane;
@@ -34,7 +35,7 @@ import net.miginfocom.swing.MigLayout;
 public class ReactClient
 {
 	private final Network network;
-	
+	private NetworkScheduler ns;
 	private JFrame frmReactClient;
 	private static ReactClient instance;
 	public JXTabbedPane tabbedPane;
@@ -66,6 +67,8 @@ public class ReactClient
 		
 		this.network = new Network();
 		initialize();
+		ns = new NetworkScheduler(network.getServers(), 500);
+		ns.start();
 	}
 	
 	private void initialize()
@@ -190,6 +193,7 @@ public class ReactClient
 	
 	public static void restart()
 	{
+		instance.ns.interrupt();
 		Dimension d = instance.frmReactClient.getSize();
 		Point p = instance.frmReactClient.getLocationOnScreen();
 		instance.frmReactClient.setVisible(false);
@@ -207,6 +211,7 @@ public class ReactClient
 	
 	public void exit()
 	{
+		ns.interrupt();
 		System.exit(0);
 	}
 	

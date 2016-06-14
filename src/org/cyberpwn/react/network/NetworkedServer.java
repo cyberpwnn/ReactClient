@@ -14,6 +14,9 @@ public class NetworkedServer
 	private Integer port;
 	private GMap<String, Double> sample;
 	private ServerTab tab;
+	private Request rx;
+	private String version;
+	private String versionBukkit;
 	
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
 	{
@@ -24,6 +27,9 @@ public class NetworkedServer
 		this.tab = null;
 		this.port = port;
 		this.sample = new GMap<String, Double>();
+		this.rx = null;
+		this.version = null;
+		this.versionBukkit = null;
 	}
 	
 	public NetworkedServer(JSONObject js)
@@ -52,16 +58,39 @@ public class NetworkedServer
 	
 	public void requestSample()
 	{
-		new Request(this, new RequestCallback()
+		if(version == null || versionBukkit == null)
+		{
+			new RequestBasic(this, new RequestCallbackBasic()
+			{
+				public void run()
+				{
+					if(isOk())
+					{
+						version = getData().get("version");
+						versionBukkit = getData().get("version-bukkit");
+					}
+				}
+			}).start();
+		}
+		
+		if(rx != null && rx.isAlive())
+		{
+			return;
+		}
+		
+		rx = new Request(this, new RequestCallback()
 		{
 			public void run()
 			{
 				if(isOk())
 				{
 					sample = getData();
+					tab.push(sample);
 				}
 			}
 		});
+		
+		rx.start();
 	}
 	
 	public String getName()
@@ -123,14 +152,29 @@ public class NetworkedServer
 	{
 		this.sample = sample;
 	}
-
+	
 	public ServerTab getTab()
 	{
 		return tab;
 	}
-
+	
 	public void setTab(ServerTab tab)
 	{
 		this.tab = tab;
+	}
+
+	public Request getRx()
+	{
+		return rx;
+	}
+
+	public String getVersion()
+	{
+		return version;
+	}
+
+	public String getVersionBukkit()
+	{
+		return versionBukkit;
 	}
 }

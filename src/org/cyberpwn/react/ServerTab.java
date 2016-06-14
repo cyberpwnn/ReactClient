@@ -18,7 +18,11 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import org.cyberpwn.react.network.NetworkedServer;
+import org.cyberpwn.react.ui.Grapher;
 import org.cyberpwn.react.ui.JXTabbedPane;
+import org.cyberpwn.react.util.F;
+import org.cyberpwn.react.util.GList;
+import org.cyberpwn.react.util.GMap;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -26,9 +30,22 @@ public class ServerTab
 {
 	private NetworkedServer ns;
 	
+	private JLabel lblTps;
+	private JLabel lblMbUsed;
+	private JLabel lblGcminute;
+	private JLabel lblMahs;
+	private JLabel lblUsingSpigot;
+	private JLabel lblOnline;
+	private JLabel lblmsPing;
+	
+	private JPanel TPS;
+	private Grapher GTPS;
+	private GList<Double> DTPS;
+	
 	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tabbedPane)
 	{
 		this.ns = server;
+		this.DTPS = new GList<Double>().qadd(20.0);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")), panel, null);
@@ -52,21 +69,17 @@ public class ServerTab
 		lblServerName.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_5.add(lblServerName, "cell 0 0");
 		
-		JLabel lblUsingSpigot = new JLabel("Using Spigot 1.8.8");
+		lblUsingSpigot = new JLabel("Using Spigot 1.8.8");
 		lblUsingSpigot.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_5.add(lblUsingSpigot, "cell 0 1");
 		
-		JLabel lblOnline = new JLabel("146 Players Online");
+		lblOnline = new JLabel("146 Players Online");
 		lblOnline.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_5.add(lblOnline, "cell 0 2");
 		
-		JLabel lblHours = new JLabel("7 Hours Uptime");
-		lblHours.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_5.add(lblHours, "cell 0 3");
-		
-		JLabel lblmsPing = new JLabel("43 Plugins");
+		lblmsPing = new JLabel("43 Plugins");
 		lblmsPing.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_5.add(lblmsPing, "cell 0 4");
+		panel_5.add(lblmsPing, "cell 0 3");
 		
 		JPanel panel_8 = new JPanel();
 		panel_8.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -120,14 +133,16 @@ public class ServerTab
 		lblCpuLoad.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_7.add(lblCpuLoad, "flowx,cell 0 0");
 		
-		JLabel lblTps = new JLabel("20 TPS (99% Stable)");
+		lblTps = new JLabel("20 TPS (99% Stable)");
 		lblTps.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_7.add(lblTps, "cell 1 0");
 		
-		JPanel panel_10 = new JPanel();
-		panel_10.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_10.setBackground(Color.DARK_GRAY);
-		panel_7.add(panel_10, "cell 0 1 2 2,grow");
+		TPS = new JPanel();
+		TPS.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		TPS.setBackground(Color.DARK_GRAY);
+		panel_7.add(TPS, "cell 0 1 2 2,grow");
+		GTPS = new Grapher(TPS.getWidth(), TPS.getHeight(), 20, Color.CYAN, new GList<Double>().qadd(1.0));
+		TPS.add(GTPS);
 		
 		JPanel panel_13 = new JPanel();
 		tabbedPane_2.addTab("Memory", null, panel_13, null);
@@ -143,7 +158,7 @@ public class ServerTab
 		lblMemory.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_14.add(lblMemory, "cell 0 0");
 		
-		JLabel lblMbUsed = new JLabel("683 MB Used");
+		lblMbUsed = new JLabel("683 MB Used");
 		lblMbUsed.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_14.add(lblMbUsed, "cell 1 0");
 		
@@ -162,7 +177,7 @@ public class ServerTab
 		lblGarbage.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_16.add(lblGarbage, "cell 0 0");
 		
-		JLabel lblGcminute = new JLabel("9 GC/Minute");
+		lblGcminute = new JLabel("9 GC/Minute");
 		lblGcminute.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_16.add(lblGcminute, "cell 1 0");
 		
@@ -181,7 +196,7 @@ public class ServerTab
 		lblState.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_15.add(lblState, "cell 0 0");
 		
-		JLabel lblMahs = new JLabel("264 MAH/s");
+		lblMahs = new JLabel("264 MAH/s");
 		lblMahs.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_15.add(lblMahs, "cell 1 0");
 		
@@ -210,7 +225,7 @@ public class ServerTab
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_12.add(list, "cell 0 1 2 1,grow");
 		
-		JLabel lblNewLabel = new JLabel("Executing \"Purge Chunks\" (33%)");
+		JLabel lblNewLabel = new JLabel("Not Yet Implemented");
 		lblNewLabel.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_12.add(lblNewLabel, "cell 0 2");
 		
@@ -228,13 +243,51 @@ public class ServerTab
 		panel_3.add(panel_18, "cell 0 0 2 2,grow");
 		panel_18.setLayout(new MigLayout("", "[]", "[][]"));
 		
-		JLabel lblNoIssuesFound = new JLabel("No Issues Found");
+		JLabel lblNoIssuesFound = new JLabel("No Issues Found (NOT YET IMPLEMENTED)");
 		lblNoIssuesFound.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_18.add(lblNoIssuesFound, "cell 0 0");
 		
 		JLabel lblNewLabel_1 = new JLabel("Looks Like this server is doing fine for the moment!");
 		lblNewLabel_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_18.add(lblNewLabel_1, "cell 0 1");
-		
 	}
+
+	public void push(GMap<String, Double> sample)
+	{
+		lblUsingSpigot.setText("Using " + ns.getVersionBukkit());
+		lblTps.setText(F.f(sample.get("tps"), 2) + " TPS (" + F.pc(sample.get("stability"), 0) + " Stable)");
+		lblGcminute.setText(F.f(sample.get("spms")) + " GC/Minute");
+		lblMahs.setText(F.f(sample.get("mah/s")) + " MAH/s");
+		lblMbUsed.setText(F.mem(sample.get("mem").longValue()) + " Used");
+		lblOnline.setText(F.f(sample.get("plr")) + " Players Online");
+		lblmsPing.setText(F.f(sample.get("plg")) + " Loaded Plugins");
+		
+		DTPS.add(sample.get("tps"));
+		
+		if(DTPS.size() > 64)
+		{
+			DTPS.remove(0);
+		}
+		
+		GTPS.setWidth(TPS.getWidth());
+		GTPS.setHeight(TPS.getHeight());
+		GTPS.setData(DTPS);
+		GTPS.repaint();
+		TPS.repaint();
+	}
+	
+	/*
+			>> liq/s : 0.0
+			>> tnt/s : 0.0
+			>> drops : 31.0
+			>> hist : 1.0
+			>> chk/s : 10.6
+			>> rct : 501220.2773345846
+			>> red/s : 0.0
+			>> chunks : 0.0
+			>> mb/p : 29.857142857142858
+			>> ents : 190.0
+			>> cgen/s : 2.0
+			>> chunkmem : 0.0
+	 */
 }

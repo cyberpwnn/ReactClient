@@ -10,13 +10,13 @@ import java.net.UnknownHostException;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONObject;
 
-public class Request extends Thread
+public class RequestBasic extends Thread
 {
-	private RequestCallback callback;
+	private RequestCallbackBasic callback;
 	private NetworkedServer ns;
 	private Socket s;
 	
-	public Request(NetworkedServer ns, RequestCallback callback)
+	public RequestBasic(NetworkedServer ns, RequestCallbackBasic callback)
 	{
 		this.callback = callback;
 		this.ns = ns;
@@ -30,12 +30,12 @@ public class Request extends Thread
 			s.setSoTimeout(500);
 			DataInputStream i = new DataInputStream(s.getInputStream());
 			DataOutputStream o = new DataOutputStream(s.getOutputStream());
-			PacketRequest pr = new PacketRequest(ns.getUsername(), ns.getPassword(), PacketRequestType.GET_SAMPLES.toString());
+			PacketRequest pr = new PacketRequest(ns.getUsername(), ns.getPassword(), PacketRequestType.GET_BASIC.toString());
 			o.writeUTF(pr.toString());
 			o.flush();
 			String response = i.readUTF();
 			PacketResponse ps = new PacketResponse(new JSONObject(response));
-			GMap<String, Double> data = new GMap<String, Double>();
+			GMap<String, String> data = new GMap<String, String>();
 			
 			if(ps.getString("type").equals("OK"))
 			{
@@ -48,7 +48,7 @@ public class Request extends Thread
 					
 					try
 					{
-						data.put(j, ps.getJSON().getDouble(j));
+						data.put(j, ps.getJSON().getString(j));
 					}
 					
 					catch(Exception e)
