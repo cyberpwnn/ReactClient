@@ -1,4 +1,4 @@
-package org.cyberpwn.react;
+package org.cyberpwn.react.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,9 +17,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.network.NetworkedServer;
-import org.cyberpwn.react.ui.Grapher;
-import org.cyberpwn.react.ui.JXTabbedPane;
 import org.cyberpwn.react.util.F;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;

@@ -1,6 +1,6 @@
 package org.cyberpwn.react.network;
 
-import org.cyberpwn.react.ServerTab;
+import org.cyberpwn.react.ui.ServerTab;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
 import org.cyberpwn.react.util.JSONObject;

@@ -29,6 +29,7 @@ import org.cyberpwn.react.network.NetworkScheduler;
 import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.ui.AbstractTabRenderer;
 import org.cyberpwn.react.ui.JXTabbedPane;
+import org.cyberpwn.react.ui.ServerTab;
 
 import net.miginfocom.swing.MigLayout;
 
