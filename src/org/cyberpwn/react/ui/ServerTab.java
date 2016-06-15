@@ -75,19 +75,19 @@ public class ServerTab
 		panel_1.add(panel_5, "cell 0 0 13 4,grow");
 		panel_5.setLayout(new MigLayout("", "[][][][]", "[][][][][][][]"));
 		
-		JLabel lblServerName = new JLabel("Server Name");
+		JLabel lblServerName = new JLabel("Connecting...");
 		lblServerName.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_5.add(lblServerName, "cell 0 0");
 		
-		lblUsingSpigot = new JLabel("Using Spigot 1.8.8");
+		lblUsingSpigot = new JLabel("Connecting...");
 		lblUsingSpigot.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_5.add(lblUsingSpigot, "cell 0 1");
 		
-		lblOnline = new JLabel("146 Players Online");
+		lblOnline = new JLabel("");
 		lblOnline.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_5.add(lblOnline, "cell 0 2");
 		
-		lblmsPing = new JLabel("43 Plugins");
+		lblmsPing = new JLabel("");
 		lblmsPing.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_5.add(lblmsPing, "cell 0 3");
 		
@@ -143,7 +143,7 @@ public class ServerTab
 		lblCpuLoad.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_7.add(lblCpuLoad, "flowx,cell 0 0");
 		
-		lblTps = new JLabel("20 TPS (99% Stable)");
+		lblTps = new JLabel("Connecting...");
 		lblTps.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_7.add(lblTps, "cell 1 0");
 		
@@ -166,7 +166,7 @@ public class ServerTab
 		lblMemory.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_14.add(lblMemory, "cell 0 0");
 		
-		lblMbUsed = new JLabel("683 MB Used");
+		lblMbUsed = new JLabel("Connecting...");
 		lblMbUsed.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_14.add(lblMbUsed, "cell 1 0");
 		
@@ -185,7 +185,7 @@ public class ServerTab
 		lblGarbage.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_16.add(lblGarbage, "cell 0 0");
 		
-		lblGcminute = new JLabel("9 GC/Minute");
+		lblGcminute = new JLabel("Connecting...");
 		lblGcminute.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_16.add(lblGcminute, "cell 1 0");
 		
@@ -204,7 +204,7 @@ public class ServerTab
 		lblState.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_15.add(lblState, "cell 0 0");
 		
-		lblMahs = new JLabel("264 MAH/s");
+		lblMahs = new JLabel("Connecting...");
 		lblMahs.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_15.add(lblMahs, "cell 1 0");
 		
