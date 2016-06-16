@@ -135,6 +135,23 @@ public class Network
 		}
 	}
 	
+	public void rename(String newName, NetworkedServer ns)
+	{
+		servers.remove(ns.getName());
+		servers.put(newName, ns);
+		ns.setName(newName);
+		
+		try
+		{
+			save();
+		} 
+		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public JSONObject toJson()
 	{
 		JSONObject js = new JSONObject();

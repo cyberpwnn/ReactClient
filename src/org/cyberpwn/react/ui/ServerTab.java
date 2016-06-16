@@ -29,6 +29,7 @@ public class ServerTab
 {
 	private NetworkedServer ns;
 	
+	private JLabel lblServerName;
 	private JLabel lblTps;
 	private JLabel lblMbUsed;
 	private JLabel lblGcminute;
@@ -36,6 +37,11 @@ public class ServerTab
 	private JLabel lblUsingSpigot;
 	private JLabel lblOnline;
 	private JLabel lblmsPing;
+	private JLabel label;
+	private JLabel label2;
+	
+	private JXTabbedPane tabbedPane;
+	private JPanel panel;
 	
 	private Grapher TPS;
 	private GList<Double> DTPS;
@@ -49,15 +55,16 @@ public class ServerTab
 	private Grapher MAH;
 	private GList<Double> DMAH;
 	
-	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tabbedPane)
+	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tp)
 	{
+		this.tabbedPane = tp;
 		this.ns = server;
 		this.DTPS = new GList<Double>().qadd(20.0);
 		this.DMEM = new GList<Double>().qadd(128.0);
 		this.DGC = new GList<Double>().qadd(1.0);
 		this.DMAH = new GList<Double>().qadd(9.0);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")), panel, null);
 		panel.setLayout(new BorderLayout(0, 0));
 		
@@ -75,7 +82,7 @@ public class ServerTab
 		panel_1.add(panel_5, "cell 0 0 13 4,grow");
 		panel_5.setLayout(new MigLayout("", "[][][][]", "[][][][][][][]"));
 		
-		JLabel lblServerName = new JLabel("Connecting...");
+		lblServerName = new JLabel("Connecting...");
 		lblServerName.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_5.add(lblServerName, "cell 0 0");
 		
@@ -101,16 +108,20 @@ public class ServerTab
 		lblConnection.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_8.add(lblConnection, "cell 0 0");
 		
-		JLabel lblPacketLoss = new JLabel("Packet Loss 0% (0 Failures)");
-		lblPacketLoss.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_8.add(lblPacketLoss, "cell 0 1");
-		
-		JLabel lblmsPing_1 = new JLabel("21ms Ping");
-		lblmsPing_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_8.add(lblmsPing_1, "cell 0 2");
-		
-		JButton btnNewButton_1 = new JButton("Delete Connection");
+		JButton btnNewButton_1 = new JButton("Edit");
 		btnNewButton_1.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				ReactClient.getInstance().editConnection(ns);
+			}
+		});
+		btnNewButton_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+		panel_8.add(btnNewButton_1, "cell 0 2");
+		
+		JButton btnNewButton_2 = new JButton("Delete");
+		btnNewButton_2.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseReleased(MouseEvent e)
@@ -118,8 +129,14 @@ public class ServerTab
 				ReactClient.getInstance().deleteConnection(ns);
 			}
 		});
-		btnNewButton_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_8.add(btnNewButton_1, "cell 0 5");
+		btnNewButton_2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+		panel_8.add(btnNewButton_2, "cell 0 2");
+		
+		label = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini-red.png")));
+		panel_8.add(label, "cell 0 3");
+		label2 = new JLabel("Connecting...");
+		label2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+		panel_8.add(label2, "cell 0 3");
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane_1.addTab("Performance", null, panel_2, null);
@@ -262,13 +279,16 @@ public class ServerTab
 	
 	public void push(GMap<String, Double> sample)
 	{
-		lblUsingSpigot.setText("Using " + ns.getVersion());
+		lblServerName.setText(ns.getName());
+		lblUsingSpigot.setText(ns.getVersion());
 		lblTps.setText(F.f(sample.get("tps"), 2) + " TPS (" + F.pc(sample.get("stability"), 0) + " Stable)");
 		lblGcminute.setText(F.f(sample.get("spms")) + " GC/Minute");
 		lblMahs.setText(F.f(sample.get("mah/s")) + " MAH/s");
 		lblMbUsed.setText(F.mem(sample.get("mem").longValue()) + " Used");
 		lblOnline.setText(F.f(sample.get("plr")) + " Players Online");
 		lblmsPing.setText(F.f(sample.get("plg")) + " Loaded Plugins");
+		label.setIcon(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")));
+		label2.setText("Connected");
 		
 		if(MAH.getMax() < sample.get("mah/s"))
 		{

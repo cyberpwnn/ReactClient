@@ -2,10 +2,7 @@ package org.cyberpwn.react.network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONObject;
@@ -63,19 +60,9 @@ public class Request extends Thread
 			callback.run(data, false);
 		}
 		
-		catch(UnknownHostException e)
+		catch(Exception e)
 		{
-			e.printStackTrace();
-		}
-		
-		catch(SocketTimeoutException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch(IOException e)
-		{
-			e.printStackTrace();
+			
 		}
 	}
 }

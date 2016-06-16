@@ -86,6 +86,7 @@ public class NetworkedServer
 				{
 					sample = getData();
 					tab.push(sample);
+					
 				}
 			}
 		});

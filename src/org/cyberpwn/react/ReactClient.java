@@ -248,4 +248,29 @@ public class ReactClient
 		
 		restart();
 	}
+
+	public void editConnection(NetworkedServer ns)
+	{
+		EditConnection.editConnection(ns);
+	}
+
+	public void validateConnectionEdit(String name, String address, int port, String username, String password, NetworkedServer ns)
+	{
+		network.rename(name, ns);
+		ns.setPort(port);
+		ns.setAddress(address);
+		ns.setPassword(password);
+		ns.setUsername(username);
+		
+		try
+		{
+			network.save();
+		} 
+		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		restart();
+	}
 }
