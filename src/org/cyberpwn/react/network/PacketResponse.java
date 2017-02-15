@@ -10,7 +10,7 @@ public class PacketResponse
 	
 	public PacketResponse()
 	{
-		this.js = new JSONObject();
+		js = new JSONObject();
 	}
 	
 	public PacketResponse(JSONObject js)
@@ -83,6 +83,12 @@ public class PacketResponse
 	public Boolean getBoolean(String s)
 	{
 		return js.getBoolean(s);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return js.toString();
 	}
 	
 	public GList<String> getStringList(String s)

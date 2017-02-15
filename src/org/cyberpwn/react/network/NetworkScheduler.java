@@ -13,19 +13,21 @@ public class NetworkScheduler extends Thread
 		this.ms = ms;
 	}
 	
+	@Override
 	public void run()
 	{
 		while(!interrupted())
 		{
 			for(NetworkedServer i : ns)
 			{
+				i.requestActions();
 				i.requestSample();
 			}
 			
 			try
 			{
 				Thread.sleep(ms);
-			} 
+			}
 			
 			catch(InterruptedException e)
 			{

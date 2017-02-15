@@ -3,29 +3,32 @@ package org.cyberpwn.react.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
-
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.util.F;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
-
 import net.miginfocom.swing.MigLayout;
 
-public class ServerTab
+public class ServerTab implements ListSelectionListener, ActionListener
 {
 	private NetworkedServer ns;
 	
@@ -39,6 +42,11 @@ public class ServerTab
 	private JLabel lblmsPing;
 	private JLabel label;
 	private JLabel label2;
+	private JLabel lblNewLabel;
+	
+	private JButton btnNewButton;
+	private JList<String> actionSet;
+	private DefaultListModel<String> actionList;
 	
 	private JXTabbedPane tabbedPane;
 	private JPanel panel;
@@ -57,12 +65,12 @@ public class ServerTab
 	
 	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tp)
 	{
-		this.tabbedPane = tp;
-		this.ns = server;
-		this.DTPS = new GList<Double>().qadd(20.0);
-		this.DMEM = new GList<Double>().qadd(128.0);
-		this.DGC = new GList<Double>().qadd(1.0);
-		this.DMAH = new GList<Double>().qadd(9.0);
+		tabbedPane = tp;
+		ns = server;
+		DTPS = new GList<Double>().qadd(20.0);
+		DMEM = new GList<Double>().qadd(128.0);
+		DGC = new GList<Double>().qadd(1.0);
+		DMAH = new GList<Double>().qadd(9.0);
 		
 		panel = new JPanel();
 		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")), panel, null);
@@ -244,18 +252,26 @@ public class ServerTab
 		lblSelectAnAction.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
 		panel_12.add(lblSelectAnAction, "cell 0 0");
 		
-		JList<String> list = new JList<String>();
-		list.setBackground(Color.LIGHT_GRAY);
-		list.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel_12.add(list, "cell 0 1 2 1,grow");
+		actionList = new DefaultListModel<String>();
 		
-		JLabel lblNewLabel = new JLabel("Not Yet Implemented");
+		actionSet = new JList<String>(actionList);
+		actionSet.setBackground(Color.WHITE);
+		actionSet.setFont(new Font("Segoe UI Light", Font.PLAIN, 20));
+		actionSet.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		actionSet.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		actionSet.addListSelectionListener((ListSelectionListener) this);
+		
+		JScrollPane scrollActions = new JScrollPane(actionSet);
+		panel_12.add(scrollActions, "cell 0 1 2 1,grow");
+		
+		lblNewLabel = new JLabel("Not Yet Implemented");
 		lblNewLabel.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_12.add(lblNewLabel, "cell 0 2");
 		
-		JButton btnNewButton = new JButton("Perform Action");
+		btnNewButton = new JButton("Perform Action");
 		btnNewButton.setFont(new Font("Segoe UI Light", Font.PLAIN, 20));
+		btnNewButton.setEnabled(false);
+		btnNewButton.addActionListener(this);
 		panel_12.add(btnNewButton, "cell 1 2");
 		
 		JPanel panel_3 = new JPanel();
@@ -275,6 +291,21 @@ public class ServerTab
 		JLabel lblNewLabel_1 = new JLabel("Looks Like this server is doing fine for the moment!");
 		lblNewLabel_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_18.add(lblNewLabel_1, "cell 0 1");
+	}
+	
+	public void pushStartedActions()
+	{
+		label2.setText("Getting Reactors...");
+	}
+	
+	public void push(GList<String> actions)
+	{
+		actionList.clear();
+		
+		for(String i : actions)
+		{
+			actionList.addElement(i);
+		}
 	}
 	
 	public void push(GMap<String, Double> sample)
@@ -347,5 +378,23 @@ public class ServerTab
 		
 		MAH.setData(DMAH);
 		MAH.repaint();
+	}
+	
+	@Override
+	public void valueChanged(ListSelectionEvent e)
+	{
+		lblNewLabel.setText(actionSet.getSelectedValue());
+		btnNewButton.setEnabled(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		String action = actionSet.getSelectedValue();
+		actionSet.clearSelection();
+		btnNewButton.setEnabled(false);
+		System.out.println("Perform Action: " + action);
+		System.out.println("Sending Action Packet...");
+		ns.act(action, lblNewLabel);
 	}
 }

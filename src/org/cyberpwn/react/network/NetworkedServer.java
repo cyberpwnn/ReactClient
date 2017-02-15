@@ -1,6 +1,8 @@
 package org.cyberpwn.react.network;
 
+import javax.swing.JLabel;
 import org.cyberpwn.react.ui.ServerTab;
+import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
 import org.cyberpwn.react.util.JSONObject;
@@ -15,8 +17,11 @@ public class NetworkedServer
 	private GMap<String, Double> sample;
 	private ServerTab tab;
 	private Request rx;
+	private RequestActions ra;
 	private String version;
 	private String versionBukkit;
+	private GList<String> actions;
+	private boolean gettingReactors;
 	
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
 	{
@@ -24,23 +29,26 @@ public class NetworkedServer
 		this.username = username;
 		this.password = password;
 		this.address = address;
-		this.tab = null;
+		tab = null;
+		gettingReactors = true;
+		actions = null;
 		this.port = port;
-		this.sample = new GMap<String, Double>();
-		this.rx = null;
-		this.version = null;
-		this.versionBukkit = null;
+		sample = new GMap<String, Double>();
+		rx = null;
+		ra = null;
+		version = null;
+		versionBukkit = null;
 	}
 	
 	public NetworkedServer(JSONObject js)
 	{
-		this.name = js.getString("name");
-		this.username = js.getString("username");
-		this.password = js.getString("password");
-		this.address = js.getString("address");
-		this.port = js.getInt("port");
-		this.tab = null;
-		this.sample = new GMap<String, Double>();
+		name = js.getString("name");
+		username = js.getString("username");
+		password = js.getString("password");
+		address = js.getString("address");
+		port = js.getInt("port");
+		tab = null;
+		sample = new GMap<String, Double>();
 	}
 	
 	public void toJson(JSONArray parent)
@@ -56,12 +64,51 @@ public class NetworkedServer
 		parent.put(js);
 	}
 	
+	public void requestActions()
+	{
+		if(actions != null)
+		{
+			return;
+		}
+		
+		gettingReactors = true;
+		
+		tab.pushStartedActions();
+		
+		if(ra != null && ra.isAlive())
+		{
+			return;
+		}
+		
+		ra = new RequestActions(this, new RequestActionsCallback()
+		{
+			@Override
+			public void run()
+			{
+				if(isOk())
+				{
+					actions = getActions();
+					tab.push(actions);
+					gettingReactors = false;
+				}
+			}
+		});
+		
+		ra.start();
+	}
+	
 	public void requestSample()
 	{
+		if(gettingReactors)
+		{
+			return;
+		}
+		
 		if(version == null || versionBukkit == null)
 		{
 			new RequestBasic(this, new RequestCallbackBasic()
 			{
+				@Override
 				public void run()
 				{
 					if(isOk())
@@ -80,6 +127,7 @@ public class NetworkedServer
 		
 		rx = new Request(this, new RequestCallback()
 		{
+			@Override
 			public void run()
 			{
 				if(isOk())
@@ -163,19 +211,42 @@ public class NetworkedServer
 	{
 		this.tab = tab;
 	}
-
+	
 	public Request getRx()
 	{
 		return rx;
 	}
-
+	
 	public String getVersion()
 	{
 		return version;
 	}
-
+	
 	public String getVersionBukkit()
 	{
 		return versionBukkit;
+	}
+	
+	public void act(String action, final JLabel label)
+	{
+		label.setText("Preparing...");
+		RequestAction ra = new RequestAction(this, new RequestActionCallback()
+		{
+			@Override
+			public void run()
+			{
+				if(isOk())
+				{
+					label.setText("Action Completed");
+				}
+				
+				else
+				{
+					label.setText("Failed... Check Console.");
+				}
+			}
+		}, action);
+		label.setText("Executing...");
+		ra.start();
 	}
 }
