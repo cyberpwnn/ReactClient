@@ -6,11 +6,13 @@ public class RequestCallback implements Runnable
 {
 	private GMap<String, Double> data;
 	private boolean ok;
+	private String console;
 	
-	public void run(GMap<String, Double> data, boolean ok)
+	public void run(GMap<String, Double> data, String console, boolean ok)
 	{
 		this.data = data;
 		this.ok = ok;
+		this.console = console;
 		run();
 	}
 	
@@ -19,14 +21,19 @@ public class RequestCallback implements Runnable
 	{
 		
 	}
-
+	
 	public GMap<String, Double> getData()
 	{
 		return data;
 	}
-
+	
 	public boolean isOk()
 	{
 		return ok;
+	}
+	
+	public String getConsole()
+	{
+		return console;
 	}
 }

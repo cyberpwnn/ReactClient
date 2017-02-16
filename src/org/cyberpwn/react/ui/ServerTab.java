@@ -5,17 +5,23 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -23,6 +29,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.network.NetworkedServer;
+import org.cyberpwn.react.network.RequestCommand;
+import org.cyberpwn.react.network.RequestCommandCallback;
 import org.cyberpwn.react.util.F;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
@@ -43,7 +51,10 @@ public class ServerTab implements ListSelectionListener, ActionListener
 	private JLabel label;
 	private JLabel label2;
 	private JLabel lblNewLabel;
+	private JCheckBox chckbxNewCheckBox;
 	
+	private JScrollBar vertical;
+	private JTextArea textArea;
 	private JButton btnNewButton;
 	private JList<String> actionSet;
 	private DefaultListModel<String> actionList;
@@ -62,6 +73,7 @@ public class ServerTab implements ListSelectionListener, ActionListener
 	
 	private Grapher MAH;
 	private GList<Double> DMAH;
+	private JTextField textField;
 	
 	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tp)
 	{
@@ -275,22 +287,72 @@ public class ServerTab implements ListSelectionListener, ActionListener
 		panel_12.add(btnNewButton, "cell 1 2");
 		
 		JPanel panel_3 = new JPanel();
-		tabbedPane_1.addTab("Problems", null, panel_3, null);
+		tabbedPane_1.addTab("Console", null, panel_3, null);
 		panel_3.setLayout(new MigLayout("", "[grow][grow]", "[grow][grow]"));
 		
 		JPanel panel_18 = new JPanel();
 		panel_18.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_18.setBackground(Color.WHITE);
 		panel_3.add(panel_18, "cell 0 0 2 2,grow");
-		panel_18.setLayout(new MigLayout("", "[]", "[][]"));
+		panel_18.setLayout(new MigLayout("", "[grow]", "[grow][grow]"));
 		
-		JLabel lblNoIssuesFound = new JLabel("No Issues Found (NOT YET IMPLEMENTED)");
-		lblNoIssuesFound.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
-		panel_18.add(lblNoIssuesFound, "cell 0 0");
+		textArea = new JTextArea();
+		textArea.setBackground(Color.DARK_GRAY);
+		textArea.setForeground(Color.WHITE);
+		textArea.setFont(new Font("Lucida Console", Font.PLAIN, 16));
+		textArea.setEditable(false);
 		
-		JLabel lblNewLabel_1 = new JLabel("Looks Like this server is doing fine for the moment!");
-		lblNewLabel_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-		panel_18.add(lblNewLabel_1, "cell 0 1");
+		JScrollPane scrollConsole = new JScrollPane(textArea);
+		panel_18.add(scrollConsole, "cell 0 0,grow");
+		
+		textField = new JTextField();
+		textField.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
+		panel_18.add(textField, "flowx,cell 0 1,growx");
+		textField.setColumns(10);
+		textField.setDisabledTextColor(Color.RED);
+		textField.addKeyListener(new KeyListener()
+		{
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				if(e.getKeyCode() == 10)
+				{
+					String command = textField.getText();
+					textField.setEnabled(false);
+					
+					new RequestCommand(ns, new RequestCommandCallback()
+					{
+						@Override
+						public void run()
+						{
+							textField.setEnabled(true);
+							textField.setText("");
+							textField.requestFocusInWindow();
+						}
+					}, command).start();
+				}
+			}
+		});
+		
+		chckbxNewCheckBox = new JCheckBox("Follow Log");
+		chckbxNewCheckBox.setBackground(Color.WHITE);
+		chckbxNewCheckBox.setSelected(true);
+		chckbxNewCheckBox.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
+		panel_18.add(chckbxNewCheckBox, "cell 0 1");
+		vertical = scrollConsole.getVerticalScrollBar();
+		vertical.setValue(vertical.getMaximum());
 	}
 	
 	public void pushStartedActions()
@@ -308,8 +370,18 @@ public class ServerTab implements ListSelectionListener, ActionListener
 		}
 	}
 	
-	public void push(GMap<String, Double> sample)
+	public void push(GMap<String, Double> sample, String console)
 	{
+		if(!textArea.getText().equals(console))
+		{
+			textArea.setText(console);
+			
+			if(chckbxNewCheckBox.isSelected())
+			{
+				textArea.setCaretPosition(textArea.getDocument().getLength());
+			}
+		}
+		
 		lblServerName.setText(ns.getName());
 		lblUsingSpigot.setText(ns.getVersion());
 		lblTps.setText(F.f(sample.get("tps"), 2) + " TPS (" + F.pc(sample.get("stability"), 0) + " Stable)");

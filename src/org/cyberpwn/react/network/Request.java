@@ -3,7 +3,6 @@ package org.cyberpwn.react.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONObject;
 
@@ -19,6 +18,7 @@ public class Request extends Thread
 		this.ns = ns;
 	}
 	
+	@Override
 	public void run()
 	{
 		try
@@ -33,6 +33,7 @@ public class Request extends Thread
 			String response = i.readUTF();
 			PacketResponse ps = new PacketResponse(new JSONObject(response));
 			GMap<String, Double> data = new GMap<String, Double>();
+			String console = "";
 			
 			if(ps.getString("type").equals("OK"))
 			{
@@ -40,6 +41,13 @@ public class Request extends Thread
 				{
 					if(j.equals("type"))
 					{
+						continue;
+					}
+					
+					if(j.equals("console-s"))
+					{
+						console = ps.getJSON().getString(j).replace("[0;36;1m", "").replace("[0;30;22m", "").replace("[0;34;22m", "").replace("[0;32;22m", "").replace("[0;36;22m", "").replace("[0;31;22m", "").replace("[0;35;22m", "").replace("[0;37;22m", "").replace("[0;34;1m", "").replace("[5m", "").replace("[21m", "").replace("[9m", "").replace("[4m", "").replace("[3m", "").replace("[0;33;22m", "").replace("[0;31;1m", "").replace("[0;35;1m", "").replace("[0;32;1m", "").replace("[0;33;22m", "").replace("[0;33;1m", "").replace("[0;37;1m", "").replace("[0;30;1m", "").replace("[0;30;1m", "").replace("[m", "").replace("", "").replace("[m", "");
+						
 						continue;
 					}
 					
@@ -54,10 +62,10 @@ public class Request extends Thread
 					}
 				}
 				
-				callback.run(data, true);
+				callback.run(data, console, true);
 			}
 			
-			callback.run(data, false);
+			callback.run(data, console, false);
 		}
 		
 		catch(Exception e)

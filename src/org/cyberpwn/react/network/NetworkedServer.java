@@ -153,8 +153,7 @@ public class NetworkedServer
 				if(isOk())
 				{
 					sample = getData();
-					tab.push(sample);
-					
+					tab.push(sample, getConsole());
 				}
 			}
 		});
