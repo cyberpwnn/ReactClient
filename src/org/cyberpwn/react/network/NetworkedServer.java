@@ -1,6 +1,7 @@
 package org.cyberpwn.react.network;
 
 import javax.swing.JLabel;
+import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.ui.ServerTab;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
@@ -21,11 +22,13 @@ public class NetworkedServer
 	private String version;
 	private String versionBukkit;
 	private GList<String> actions;
+	private int req;
 	private boolean gettingReactors;
 	
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
 	{
 		this.name = name;
+		req = 0;
 		this.username = username;
 		this.password = password;
 		this.address = address;
@@ -64,8 +67,18 @@ public class NetworkedServer
 		parent.put(js);
 	}
 	
+	public void reset()
+	{
+		req = 0;
+	}
+	
 	public void requestActions()
 	{
+		if(ReactClient.getInstance().isLocked(this))
+		{
+			return;
+		}
+		
 		if(actions != null)
 		{
 			return;
@@ -95,6 +108,13 @@ public class NetworkedServer
 		});
 		
 		ra.start();
+		req++;
+		
+		if(req > 4)
+		{
+			System.out.println("Failed to connect.");
+			ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
+		}
 	}
 	
 	public void requestSample()

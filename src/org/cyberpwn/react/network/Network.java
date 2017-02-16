@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import org.cyberpwn.react.ConnectionFailure;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
@@ -17,7 +17,7 @@ public class Network
 	
 	public Network()
 	{
-		this.servers = new GMap<String, NetworkedServer>();
+		servers = new GMap<String, NetworkedServer>();
 		
 		File f = new File(new File(".").getAbsolutePath(), "react-data");
 		f.mkdirs();
@@ -43,7 +43,7 @@ public class Network
 				try
 				{
 					save();
-				} 
+				}
 				
 				catch(IOException e1)
 				{
@@ -57,8 +57,8 @@ public class Network
 			try
 			{
 				save();
-			} 
-
+			}
+			
 			catch(Exception e)
 			{
 				e.printStackTrace();
@@ -101,7 +101,7 @@ public class Network
 			
 			result = sb.toString();
 			br.close();
-		} 
+		}
 		
 		catch(Exception e)
 		{
@@ -123,7 +123,7 @@ public class Network
 	
 	public void fromJson(JSONObject network)
 	{
-		this.servers = new GMap<String, NetworkedServer>();
+		servers = new GMap<String, NetworkedServer>();
 		
 		JSONArray js = network.getJSONArray("servers");
 		
@@ -144,7 +144,7 @@ public class Network
 		try
 		{
 			save();
-		} 
+		}
 		
 		catch(IOException e)
 		{
@@ -166,7 +166,7 @@ public class Network
 		
 		return js;
 	}
-
+	
 	public void addConnection(String name, String address, int port, String username, String password)
 	{
 		NetworkedServer ns = new NetworkedServer(name, username, password, address, port);
@@ -175,16 +175,21 @@ public class Network
 		try
 		{
 			save();
-		} 
+		}
 		
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void deleteServer(NetworkedServer ns)
 	{
 		servers.remove(ns.getName());
+	}
+	
+	public void fail(NetworkedServer networkedServer)
+	{
+		ConnectionFailure.failed(networkedServer);
 	}
 }

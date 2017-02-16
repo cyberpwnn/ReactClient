@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +21,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyberpwn.react.network.Network;
 import org.cyberpwn.react.network.NetworkScheduler;
@@ -30,7 +28,7 @@ import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.ui.AbstractTabRenderer;
 import org.cyberpwn.react.ui.JXTabbedPane;
 import org.cyberpwn.react.ui.ServerTab;
-
+import org.cyberpwn.react.util.GList;
 import net.miginfocom.swing.MigLayout;
 
 public class ReactClient
@@ -40,6 +38,7 @@ public class ReactClient
 	private JFrame frmReactClient;
 	private static ReactClient instance;
 	public JXTabbedPane tabbedPane;
+	private GList<NetworkedServer> locks;
 	
 	public static void main(String[] args)
 	{
@@ -66,7 +65,7 @@ public class ReactClient
 			}
 		}
 		
-		this.network = new Network();
+		network = new Network();
 		initialize();
 		ns = new NetworkScheduler(network.getServers(), 50);
 		ns.start();
@@ -74,6 +73,7 @@ public class ReactClient
 	
 	private void initialize()
 	{
+		locks = new GList<NetworkedServer>();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu mnReact = new JMenu("React");
 		JMenuItem mntmAbout = new JMenuItem("About");
@@ -235,6 +235,7 @@ public class ReactClient
 	
 	public void deleteConnection(NetworkedServer ns)
 	{
+		releaseConnection(ns);
 		network.deleteServer(ns);
 		try
 		{
@@ -248,12 +249,12 @@ public class ReactClient
 		
 		restart();
 	}
-
+	
 	public void editConnection(NetworkedServer ns)
 	{
 		EditConnection.editConnection(ns);
 	}
-
+	
 	public void validateConnectionEdit(String name, String address, int port, String username, String password, NetworkedServer ns)
 	{
 		network.rename(name, ns);
@@ -265,12 +266,31 @@ public class ReactClient
 		try
 		{
 			network.save();
-		} 
+		}
 		
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 		restart();
+	}
+	
+	public boolean isLocked(NetworkedServer ns)
+	{
+		return locks.contains(ns);
+	}
+	
+	public void lockConnection(NetworkedServer ns2)
+	{
+		if(!locks.contains(ns2))
+		{
+			locks.add(ns2);
+		}
+	}
+	
+	public void releaseConnection(NetworkedServer ns2)
+	{
+		locks.remove(ns2);
+		ns2.reset();
 	}
 }

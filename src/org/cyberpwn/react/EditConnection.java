@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -14,10 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.ui.PortJTextField;
-
 import net.miginfocom.swing.MigLayout;
 
 public class EditConnection extends JDialog
@@ -37,7 +34,7 @@ public class EditConnection extends JDialog
 			EditConnection dialog = new EditConnection(ns);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
-		} 
+		}
 		
 		catch(Exception e)
 		{
@@ -123,7 +120,7 @@ public class EditConnection extends JDialog
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("Edit Connection");
-				okButton.addMouseListener(new MouseAdapter() 
+				okButton.addMouseListener(new MouseAdapter()
 				{
 					@Override
 					public void mouseReleased(MouseEvent e)
@@ -131,6 +128,7 @@ public class EditConnection extends JDialog
 						editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.valueOf(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
 						setVisible(false);
 						dispose();
+						ReactClient.getInstance().releaseConnection(ns);
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -140,9 +138,10 @@ public class EditConnection extends JDialog
 			
 			{
 				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addMouseListener(new MouseAdapter() {
+				cancelButton.addMouseListener(new MouseAdapter()
+				{
 					@Override
-					public void mouseReleased(MouseEvent e) 
+					public void mouseReleased(MouseEvent e)
 					{
 						setVisible(false);
 						dispose();

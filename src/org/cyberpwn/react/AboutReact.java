@@ -2,7 +2,6 @@ package org.cyberpwn.react;
 
 import java.awt.Font;
 import java.awt.Window.Type;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,6 +10,7 @@ import javax.swing.SpringLayout;
 public class AboutReact
 {
 	private JFrame frame;
+	private String version = "2.3";
 	
 	public AboutReact()
 	{
@@ -45,5 +45,11 @@ public class AboutReact
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 143, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -6, SpringLayout.NORTH, lblReactClient);
 		frame.getContentPane().add(lblNewLabel);
+		
+		JLabel labelVersion = new JLabel("Version " + version);
+		springLayout.putConstraint(SpringLayout.NORTH, labelVersion, 24, SpringLayout.NORTH, lblReactClient);
+		springLayout.putConstraint(SpringLayout.WEST, labelVersion, 6, SpringLayout.EAST, lblReactClient);
+		labelVersion.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+		frame.getContentPane().add(labelVersion);
 	}
 }

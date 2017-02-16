@@ -64,12 +64,10 @@ public class RequestActions extends Thread
 				System.out.println("Discovered " + acts.size() + " actions.");
 				System.out.println(acts.toString(", "));
 				callback.run(acts, true);
+				return;
 			}
 			
-			else
-			{
-				callback.run(acts, false);
-			}
+			callback.run(acts, false);
 		}
 		
 		catch(Exception e)
