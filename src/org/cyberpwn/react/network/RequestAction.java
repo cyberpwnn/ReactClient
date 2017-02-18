@@ -3,6 +3,7 @@ package org.cyberpwn.react.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import org.cyberpwn.react.L;
 import org.cyberpwn.react.util.JSONObject;
 
 public class RequestAction extends Thread
@@ -24,18 +25,18 @@ public class RequestAction extends Thread
 	{
 		try
 		{
-			System.out.println("Requesting Action: " + action);
+			L.l("Requesting Action: " + action);
 			s = new Socket(ns.getAddress(), ns.getPort());
 			s.setSoTimeout(500);
 			DataInputStream i = new DataInputStream(s.getInputStream());
 			DataOutputStream o = new DataOutputStream(s.getOutputStream());
 			PacketRequest pr = new PacketRequest(ns.getUsername(), ns.getPassword(), "ACTION " + action);
-			System.out.println("OUT: " + pr.toString());
+			L.n("OUT: " + pr.toString());
 			o.writeUTF(pr.toString());
 			o.flush();
 			String response = i.readUTF();
 			PacketResponse ps = new PacketResponse(new JSONObject(response));
-			System.out.println("IN: " + ps.toString());
+			L.n("IN: " + ps.toString());
 			
 			if(ps.getString("type").equals("OK"))
 			{

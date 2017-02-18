@@ -65,7 +65,10 @@ public class ReactClient
 			}
 		}
 		
+		L.l("Starting React Client");
+		L.l("Building Network Mesh");
 		network = new Network();
+		L.l("Building Frame");
 		initialize();
 		ns = new NetworkScheduler(network.getServers(), 50);
 		ns.start();
@@ -116,6 +119,8 @@ public class ReactClient
 			}
 		});
 		
+		L.l("Packing Frame");
+		
 		frmReactClient = new JFrame();
 		frmReactClient.setTitle("React Client");
 		frmReactClient.setIconImage(Toolkit.getDefaultToolkit().getImage(ReactClient.class.getResource("/org/cyberpwn/react/ui/icon.png")));
@@ -124,17 +129,16 @@ public class ReactClient
 		frmReactClient.setJMenuBar(menuBar);
 		frmReactClient.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		/*
-		 * TABS
-		 */
-		
 		if(network.getServers().isEmpty())
 		{
+			L.w("No networks found");
+			L.l("Launching tutorial page");
 			showTutorial();
 		}
 		
 		else
 		{
+			L.l("Building all servers");
 			tabbedPane = new JXTabbedPane(JTabbedPane.LEFT);
 			AbstractTabRenderer renderer = (AbstractTabRenderer) tabbedPane.getTabRenderer();
 			renderer.setPrototypeText("This text is a prototype");
@@ -144,16 +148,17 @@ public class ReactClient
 			tabbedPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 			frmReactClient.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 			
-			System.out.println("Compiling Server List...");
+			L.l("Compiling servers");
 			
 			for(NetworkedServer i : network.getServers())
 			{
-				System.out.println(" > Building (" + i.getName() + ") " + i.getAddress() + ":" + i.getPort() + " @ " + i.getUsername() + "/" + StringUtils.repeat('*', i.getPassword().length()));
+				L.l("Building (" + i.getName() + ") " + i.getAddress() + ":" + i.getPort() + " @ " + i.getUsername() + "/" + StringUtils.repeat('*', i.getPassword().length()));
 				i.setTab(new ServerTab(frmReactClient, i, tabbedPane));
 			}
 		}
 		
 		frmReactClient.setVisible(true);
+		L.l("CLIENT RUNNING");
 	}
 	
 	public void addConnection()
@@ -190,16 +195,17 @@ public class ReactClient
 		
 		JLabel lblNewLabel_1 = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/icon.png")));
 		panel_1.add(lblNewLabel_1, BorderLayout.EAST);
+		L.l("TUTORIAL LAUNCHED");
 	}
 	
 	public static void restart()
 	{
+		L.l("RESTARTING CLIENT");
 		instance.ns.interrupt();
 		Dimension d = instance.frmReactClient.getSize();
 		Point p = instance.frmReactClient.getLocationOnScreen();
 		instance.frmReactClient.setVisible(false);
 		instance.frmReactClient.dispose();
-		System.out.println("Rebuilding & Restarting Client...");
 		instance = new ReactClient();
 		instance.frmReactClient.setSize((int) d.getWidth(), (int) d.getHeight());
 		instance.frmReactClient.setLocation(p);
@@ -212,7 +218,9 @@ public class ReactClient
 	
 	public void exit()
 	{
+		L.l("INTERRUPTING NETWORK MAPPING");
 		ns.interrupt();
+		L.l("SHUTTING DOWN");
 		System.exit(0);
 	}
 	
@@ -229,14 +237,16 @@ public class ReactClient
 	public void validateConnectionAdd(String name, String address, int port, String username, String password)
 	{
 		getNetwork().addConnection(name, address, port, username, password);
-		System.out.println("Connection Added: (" + name + ") " + address + ":" + port + " @ " + username + "/" + StringUtils.repeat('*', password.length()));
+		L.l("Connection Added: (" + name + ") " + address + ":" + port + " @ " + username + "/" + StringUtils.repeat('*', password.length()));
 		restart();
 	}
 	
 	public void deleteConnection(NetworkedServer ns)
 	{
+		L.l("DELETING CONNECTION " + "(" + ns.getName() + ") " + ns.getAddress() + ":" + ns.getPort() + " @ " + ns.getUsername() + "/" + StringUtils.repeat('*', ns.getPassword().length()));
 		releaseConnection(ns);
 		network.deleteServer(ns);
+		
 		try
 		{
 			network.save();
@@ -284,12 +294,15 @@ public class ReactClient
 	{
 		if(!locks.contains(ns2))
 		{
+			L.l("Connection locked: " + ns2.getName());
+			
 			locks.add(ns2);
 		}
 	}
 	
 	public void releaseConnection(NetworkedServer ns2)
 	{
+		L.l("Connection unlocked: " + ns2.getName());
 		locks.remove(ns2);
 		ns2.reset();
 	}

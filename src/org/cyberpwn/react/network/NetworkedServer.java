@@ -1,6 +1,7 @@
 package org.cyberpwn.react.network;
 
 import javax.swing.JLabel;
+import org.cyberpwn.react.L;
 import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.ui.ServerTab;
 import org.cyberpwn.react.util.GList;
@@ -23,6 +24,7 @@ public class NetworkedServer
 	private String versionBukkit;
 	private GList<String> actions;
 	private int req;
+	private int s;
 	private boolean gettingReactors;
 	
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
@@ -38,6 +40,7 @@ public class NetworkedServer
 		this.port = port;
 		sample = new GMap<String, Double>();
 		rx = null;
+		s = 0;
 		ra = null;
 		version = null;
 		versionBukkit = null;
@@ -109,10 +112,12 @@ public class NetworkedServer
 		
 		ra.start();
 		req++;
+		tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
 		
 		if(req > 4)
 		{
-			System.out.println("Failed to connect.");
+			L.n(NetworkedServer.this.getName() + " Failed to connect.");
+			tab.status(true, "No Connection");
 			ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
 		}
 	}
@@ -123,6 +128,8 @@ public class NetworkedServer
 		{
 			return;
 		}
+		
+		s++;
 		
 		if(version == null || versionBukkit == null)
 		{
@@ -154,11 +161,36 @@ public class NetworkedServer
 				{
 					sample = getData();
 					tab.push(sample, getConsole());
+					
+					tab.status(false, "Connected");
+					
+					s = 0;
 				}
 			}
 		});
 		
 		rx.start();
+		
+		if(getDrops() > 2)
+		{
+			L.w(getName() + " dropped " + getDrops() + " packets");
+			tab.status(true, "Not Connected (" + getDrops() + " Dropouts)");
+			
+			if(getDrops() > 100)
+			{
+				tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
+				L.w(getName() + " has dropped over " + getDrops() + " packets.");
+				L.w(getName() + " lost connection. Reconnecting to reactors...");
+				ReactClient.getInstance().releaseConnection(this);
+				actions = null;
+				requestActions();
+			}
+		}
+	}
+	
+	public void push()
+	{
+		tab.push(sample);
 	}
 	
 	public String getName()
@@ -169,6 +201,11 @@ public class NetworkedServer
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+	
+	public int getDrops()
+	{
+		return s;
 	}
 	
 	public String getUsername()

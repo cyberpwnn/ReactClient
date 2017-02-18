@@ -125,6 +125,7 @@ public class EditConnection extends JDialog
 					@Override
 					public void mouseReleased(MouseEvent e)
 					{
+						L.l("Connection edited");
 						editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.valueOf(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
 						setVisible(false);
 						dispose();
@@ -143,6 +144,7 @@ public class EditConnection extends JDialog
 					@Override
 					public void mouseReleased(MouseEvent e)
 					{
+						L.l("Edit connection cancelled");
 						setVisible(false);
 						dispose();
 					}

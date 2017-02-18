@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.cyberpwn.react.ConnectionFailure;
+import org.cyberpwn.react.L;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
@@ -21,7 +22,7 @@ public class Network
 		
 		File f = new File(new File(".").getAbsolutePath(), "react-data");
 		f.mkdirs();
-		System.out.println("Loading Config at: " + f.getAbsolutePath());
+		L.l("Loading Config at: " + f.getAbsolutePath());
 		File c = new File(f, "react.json");
 		
 		if(c.exists())
@@ -38,7 +39,7 @@ public class Network
 			
 			catch(Exception e)
 			{
-				System.out.println("Appears to be a new Config.");
+				L.l("Appears to be a new Config.");
 				
 				try
 				{
@@ -70,7 +71,7 @@ public class Network
 	{
 		File f = new File(new File(".").getAbsolutePath(), "react-data");
 		f.mkdirs();
-		System.out.println("Saving Config at: " + f.getAbsolutePath());
+		L.l("Saving Config at: " + f.getAbsolutePath());
 		File c = new File(f, "react.json");
 		
 		if(!c.exists())

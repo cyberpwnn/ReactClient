@@ -1,7 +1,6 @@
 package org.cyberpwn.react.ui;
 
 import java.awt.Component;
-
 import javax.swing.Icon;
 import javax.swing.JTabbedPane;
 

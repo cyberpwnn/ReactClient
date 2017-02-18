@@ -26,7 +26,7 @@ public class ConnectionFailure extends JDialog
 		try
 		{
 			ConnectionFailure dialog = new ConnectionFailure(ns);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 			dialog.setVisible(true);
 		}
 		catch(Exception e)
@@ -121,7 +121,7 @@ public class ConnectionFailure extends JDialog
 				{
 					setVisible(false);
 					dispose();
-					ReactClient.getInstance().deleteConnection(ns);
+					ns.getTab().die();
 				}
 			});
 			
