@@ -584,15 +584,6 @@ public class ServerTab implements ListSelectionListener, ActionListener
 			}
 		}
 		
-		comboBox_1.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				DCUSTOM.clear();
-			}
-		});
-		
 		String d = (String) comboBox_1.getSelectedItem();
 		DCUSTOM.add(sample.get(d));
 		if(DCUSTOM.size() > CUSTOM.getWidth())
