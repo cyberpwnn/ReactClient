@@ -22,6 +22,7 @@ public class NetworkScheduler extends Thread
 			{
 				i.requestActions();
 				i.requestSample();
+				i.requestTimings();
 			}
 			
 			try

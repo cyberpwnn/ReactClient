@@ -1,5 +1,6 @@
 package org.cyberpwn.react.network;
 
+import java.io.IOException;
 import javax.swing.JLabel;
 import org.cyberpwn.react.L;
 import org.cyberpwn.react.ReactClient;
@@ -20,9 +21,11 @@ public class NetworkedServer
 	private ServerTab tab;
 	private Request rx;
 	private RequestActions ra;
+	private RequestTimings rt;
 	private String version;
 	private String versionBukkit;
 	private GList<String> actions;
+	private TimingsPackage timings;
 	private int req;
 	private int s;
 	private boolean gettingReactors;
@@ -37,6 +40,8 @@ public class NetworkedServer
 		tab = null;
 		gettingReactors = true;
 		actions = null;
+		timings = null;
+		rt = null;
 		this.port = port;
 		sample = new GMap<String, Double>();
 		rx = null;
@@ -55,6 +60,7 @@ public class NetworkedServer
 		port = js.getInt("port");
 		tab = null;
 		sample = new GMap<String, Double>();
+		timings = null;
 	}
 	
 	public void toJson(JSONArray parent)
@@ -120,6 +126,42 @@ public class NetworkedServer
 			tab.status(true, "No Connection");
 			ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
 		}
+	}
+	
+	public void requestTimings()
+	{
+		if(ReactClient.getInstance().isLocked(this))
+		{
+			return;
+		}
+		
+		if(rt != null && rt.isAlive())
+		{
+			return;
+		}
+		
+		rt = new RequestTimings(this, new RequestTimingsCallback()
+		{
+			@Override
+			public void run()
+			{
+				String tv = getTimings();
+				timings = new TimingsPackage();
+				
+				try
+				{
+					timings.fromData(tv);
+					tab.push(timings);
+				}
+				
+				catch(IOException e)
+				{
+					
+				}
+			}
+		});
+		
+		rt.start();
 	}
 	
 	public void requestSample()

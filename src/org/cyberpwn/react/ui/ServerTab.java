@@ -37,6 +37,7 @@ import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.network.NetworkedServer;
 import org.cyberpwn.react.network.RequestCommand;
 import org.cyberpwn.react.network.RequestCommandCallback;
+import org.cyberpwn.react.network.TimingsPackage;
 import org.cyberpwn.react.util.F;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
@@ -91,6 +92,8 @@ public class ServerTab implements ListSelectionListener, ActionListener
 	private JLabel lblConnecting;
 	private Grapher CUSTOM;
 	private JComboBox<String> comboBox_1;
+	private GMap<Color, String> timingsRef;
+	private GMap<Color, GList<Double>> timingsData;
 	
 	public ServerTab(JFrame frame, NetworkedServer server, JXTabbedPane tp)
 	{
@@ -451,6 +454,16 @@ public class ServerTab implements ListSelectionListener, ActionListener
 		chckbxNewCheckBox.setSelected(true);
 		chckbxNewCheckBox.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
 		panel_18.add(chckbxNewCheckBox, "cell 0 1");
+		
+		JPanel panel_11 = new JPanel();
+		tabbedPane_1.addTab("Timings", null, panel_11, null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GroupLayout gl_panel_11 = new GroupLayout(panel_11);
+		gl_panel_11.setHorizontalGroup(gl_panel_11.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_11.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE).addContainerGap()));
+		gl_panel_11.setVerticalGroup(gl_panel_11.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_11.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE).addContainerGap()));
+		panel_11.setLayout(gl_panel_11);
+		
 		vertical = scrollConsole.getVerticalScrollBar();
 		vertical.setValue(vertical.getMaximum());
 	}
@@ -633,5 +646,10 @@ public class ServerTab implements ListSelectionListener, ActionListener
 	public void push(GMap<String, Double> sample)
 	{
 		push(sample, lastConsole);
+	}
+	
+	public void push(TimingsPackage timings)
+	{
+		
 	}
 }
