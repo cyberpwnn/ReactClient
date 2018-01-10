@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>org.cyberpwn</groupId>
 			<artifactId>ReactLink</artifactId>
-			<version>1.1.3</version>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cyberpwn</groupId>
@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.cyberpwn</groupId>
 			<artifactId>GNet</artifactId>
-			<version>1.1</version>
+			<version>1.2.6</version>
 		</dependency>
 	</dependencies>
 </project>
