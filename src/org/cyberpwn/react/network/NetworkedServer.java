@@ -1,7 +1,9 @@
 package org.cyberpwn.react.network;
 
 import java.io.IOException;
+
 import javax.swing.JLabel;
+
 import org.cyberpwn.react.L;
 import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.ui.ServerTab;
@@ -29,7 +31,7 @@ public class NetworkedServer
 	private int req;
 	private int s;
 	private boolean gettingReactors;
-	
+
 	public NetworkedServer(String name, String username, String password, String address, Integer port)
 	{
 		this.name = name;
@@ -50,7 +52,7 @@ public class NetworkedServer
 		version = null;
 		versionBukkit = null;
 	}
-	
+
 	public NetworkedServer(JSONObject js)
 	{
 		name = js.getString("name");
@@ -62,46 +64,46 @@ public class NetworkedServer
 		sample = new GMap<String, Double>();
 		timings = null;
 	}
-	
+
 	public void toJson(JSONArray parent)
 	{
 		JSONObject js = new JSONObject();
-		
+
 		js.put("name", name);
 		js.put("username", username);
 		js.put("password", password);
 		js.put("address", address);
 		js.put("port", port);
-		
+
 		parent.put(js);
 	}
-	
+
 	public void reset()
 	{
 		req = 0;
 	}
-	
+
 	public void requestActions()
 	{
 		if(ReactClient.getInstance().isLocked(this))
 		{
 			return;
 		}
-		
+
 		if(actions != null)
 		{
 			return;
 		}
-		
+
 		gettingReactors = true;
-		
+
 		tab.pushStartedActions();
-		
+
 		if(ra != null && ra.isAlive())
 		{
 			return;
 		}
-		
+
 		ra = new RequestActions(this, new RequestActionsCallback()
 		{
 			@Override
@@ -115,11 +117,11 @@ public class NetworkedServer
 				}
 			}
 		});
-		
+
 		ra.start();
 		req++;
 		tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
-		
+
 		if(req > 4)
 		{
 			L.n(NetworkedServer.this.getName() + " Failed to connect.");
@@ -127,19 +129,19 @@ public class NetworkedServer
 			ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
 		}
 	}
-	
+
 	public void requestTimings()
 	{
 		if(ReactClient.getInstance().isLocked(this))
 		{
 			return;
 		}
-		
+
 		if(rt != null && rt.isAlive())
 		{
 			return;
 		}
-		
+
 		rt = new RequestTimings(this, new RequestTimingsCallback()
 		{
 			@Override
@@ -147,32 +149,32 @@ public class NetworkedServer
 			{
 				String tv = getTimings();
 				timings = new TimingsPackage();
-				
+
 				try
 				{
 					timings.fromData(tv);
 					tab.push(timings);
 				}
-				
+
 				catch(IOException e)
 				{
-					
+
 				}
 			}
 		});
-		
+
 		rt.start();
 	}
-	
+
 	public void requestSample()
 	{
 		if(gettingReactors)
 		{
 			return;
 		}
-		
+
 		s++;
-		
+
 		if(version == null || versionBukkit == null)
 		{
 			new RequestBasic(this, new RequestCallbackBasic()
@@ -188,12 +190,12 @@ public class NetworkedServer
 				}
 			}).start();
 		}
-		
+
 		if(rx != null && rx.isAlive())
 		{
 			return;
 		}
-		
+
 		rx = new Request(this, new RequestCallback()
 		{
 			@Override
@@ -203,21 +205,21 @@ public class NetworkedServer
 				{
 					sample = getData();
 					tab.push(sample, getConsole());
-					
+
 					tab.status(false, "Connected");
-					
+
 					s = 0;
 				}
 			}
 		});
-		
+
 		rx.start();
-		
+
 		if(getDrops() > 2)
 		{
 			L.w(getName() + " dropped " + getDrops() + " packets");
 			tab.status(true, "Not Connected (" + getDrops() + " Dropouts)");
-			
+
 			if(getDrops() > 100)
 			{
 				tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
@@ -229,102 +231,102 @@ public class NetworkedServer
 			}
 		}
 	}
-	
+
 	public void push()
 	{
 		tab.push(sample);
 	}
-	
+
 	public String getName()
 	{
 		return name;
 	}
-	
+
 	public void setName(String name)
 	{
 		this.name = name;
 	}
-	
+
 	public int getDrops()
 	{
 		return s;
 	}
-	
+
 	public String getUsername()
 	{
 		return username;
 	}
-	
+
 	public void setUsername(String username)
 	{
 		this.username = username;
 	}
-	
+
 	public String getPassword()
 	{
 		return password;
 	}
-	
+
 	public void setPassword(String password)
 	{
 		this.password = password;
 	}
-	
+
 	public String getAddress()
 	{
 		return address;
 	}
-	
+
 	public void setAddress(String address)
 	{
 		this.address = address;
 	}
-	
+
 	public Integer getPort()
 	{
 		return port;
 	}
-	
+
 	public void setPort(Integer port)
 	{
 		this.port = port;
 	}
-	
+
 	public GMap<String, Double> getSample()
 	{
 		return sample;
 	}
-	
+
 	public void setSample(GMap<String, Double> sample)
 	{
 		this.sample = sample;
 	}
-	
+
 	public ServerTab getTab()
 	{
 		return tab;
 	}
-	
+
 	public void setTab(ServerTab tab)
 	{
 		this.tab = tab;
 	}
-	
+
 	public Request getRx()
 	{
 		return rx;
 	}
-	
+
 	public String getVersion()
 	{
 		return version;
 	}
-	
+
 	public String getVersionBukkit()
 	{
 		return versionBukkit;
 	}
-	
+
 	public void act(String action, final JLabel label)
 	{
 		label.setText("Preparing...");
@@ -337,7 +339,7 @@ public class NetworkedServer
 				{
 					label.setText("Action Completed");
 				}
-				
+
 				else
 				{
 					label.setText("Failed... Check Console.");

@@ -12,13 +12,14 @@ public class RequestBasic extends Thread
 	private RequestCallbackBasic callback;
 	private NetworkedServer ns;
 	private Socket s;
-	
+
 	public RequestBasic(NetworkedServer ns, RequestCallbackBasic callback)
 	{
 		this.callback = callback;
 		this.ns = ns;
 	}
-	
+
+	@Override
 	public void run()
 	{
 		try
@@ -33,7 +34,7 @@ public class RequestBasic extends Thread
 			String response = i.readUTF();
 			PacketResponse ps = new PacketResponse(new JSONObject(response));
 			GMap<String, String> data = new GMap<String, String>();
-			
+
 			if(ps.getString("type").equals("OK"))
 			{
 				for(String j : ps.getJSON().keySet())
@@ -42,27 +43,27 @@ public class RequestBasic extends Thread
 					{
 						continue;
 					}
-					
+
 					try
 					{
 						data.put(j, ps.getJSON().getString(j));
 					}
-					
+
 					catch(Exception e)
 					{
 						e.printStackTrace();
 					}
 				}
-				
+
 				callback.run(data, true);
 			}
-			
+
 			callback.run(data, false);
 		}
-		
+
 		catch(Exception e)
 		{
-			
+
 		}
 	}
 }
