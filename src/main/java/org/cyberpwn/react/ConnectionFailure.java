@@ -1,5 +1,6 @@
 package org.cyberpwn.react;
 
+import com.sun.java.swing.SwingUtilities3;
 import org.cyberpwn.react.network.NetworkedServer;
 
 import javax.swing.*;
@@ -63,9 +64,11 @@ public class ConnectionFailure extends JDialog {
             buttonEdit.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    setVisible(false);
-                    dispose();
-                    ReactClient.getInstance().editConnection(ns);
+                    if(SwingUtilities.isLeftMouseButton(e)) {
+                        setVisible(false);
+                        dispose();
+                        ReactClient.getInstance().editConnection(ns);
+                    }
                 }
             });
             buttonPane.add(buttonEdit);
@@ -75,9 +78,11 @@ public class ConnectionFailure extends JDialog {
             btnRetry.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    setVisible(false);
-                    dispose();
-                    ReactClient.getInstance().releaseConnection(ns);
+                    if(SwingUtilities.isLeftMouseButton(e)) {
+                        setVisible(false);
+                        dispose();
+                        ReactClient.getInstance().releaseConnection(ns);
+                    }
                 }
             });
             buttonPane.add(btnRetry);
@@ -89,9 +94,11 @@ public class ConnectionFailure extends JDialog {
             cancelButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    setVisible(false);
-                    dispose();
-                    ns.getTab().die();
+                    if(SwingUtilities.isLeftMouseButton(e)) {
+                        setVisible(false);
+                        dispose();
+                        ns.getTab().die();
+                    }
                 }
             });
 
