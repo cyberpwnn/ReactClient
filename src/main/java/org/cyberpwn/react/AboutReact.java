@@ -41,7 +41,7 @@ public class AboutReact
 		lblDevelopedByCyberpwn.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		frame.getContentPane().add(lblDevelopedByCyberpwn);
 		
-		JLabel lblNewLabel = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-low.png")));
+		JLabel lblNewLabel = new JLabel(new ImageIcon(ReactClient.class.getResource("/server-low.png")));
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 143, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -6, SpringLayout.NORTH, lblReactClient);
 		frame.getContentPane().add(lblNewLabel);

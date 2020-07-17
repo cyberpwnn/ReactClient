@@ -108,7 +108,7 @@ public class ServerTab implements ListSelectionListener, ActionListener
 		
 		panel = new JPanel();
 		
-		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")), panel, null);
+		tabbedPane.addTab(ns.getName(), new ImageIcon(ReactClient.class.getResource("/server-mini.png")), panel, null);
 		index = tabbedPane.getTabCount() - 1;
 		panel.setLayout(new BorderLayout(0, 0));
 		
@@ -184,7 +184,7 @@ public class ServerTab implements ListSelectionListener, ActionListener
 		btnNewButton_2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 		panel_8.add(btnNewButton_2, "cell 0 2");
 		
-		label = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini-red.png")));
+		label = new JLabel(new ImageIcon(ReactClient.class.getResource("/server-mini-red.png")));
 		panel_8.add(label, "cell 0 3");
 		label2 = new JLabel("Starting");
 		label2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
@@ -615,7 +615,7 @@ public class ServerTab implements ListSelectionListener, ActionListener
 	
 	public void status(boolean red, String msg)
 	{
-		String resource = (red ? "/org/cyberpwn/react/ui/server-mini-red.png" : "/org/cyberpwn/react/ui/server-mini.png");
+		String resource = (red ? "/server-mini-red.png" : "/server-mini.png");
 		tabbedPane.setIconAt(index, new ImageIcon(ReactClient.class.getResource(resource)));
 		label.setIcon(new ImageIcon(ReactClient.class.getResource(resource)));
 		label2.setText(msg);

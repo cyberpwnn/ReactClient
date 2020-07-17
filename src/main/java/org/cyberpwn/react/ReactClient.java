@@ -123,7 +123,7 @@ public class ReactClient
 		
 		frmReactClient = new JFrame();
 		frmReactClient.setTitle("React Client");
-		frmReactClient.setIconImage(Toolkit.getDefaultToolkit().getImage(ReactClient.class.getResource("/org/cyberpwn/react/ui/icon.png")));
+		frmReactClient.setIconImage(Toolkit.getDefaultToolkit().getImage(ReactClient.class.getResource("/icon.png")));
 		frmReactClient.setBounds(100, 100, 813, 610);
 		frmReactClient.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReactClient.setJMenuBar(menuBar);
@@ -142,7 +142,7 @@ public class ReactClient
 			tabbedPane = new JXTabbedPane(JTabbedPane.LEFT);
 			AbstractTabRenderer renderer = (AbstractTabRenderer) tabbedPane.getTabRenderer();
 			renderer.setPrototypeText("This text is a prototype");
-			renderer.setPrototypeIcon(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-mini.png")));
+			renderer.setPrototypeIcon(new ImageIcon(ReactClient.class.getResource("/server-mini.png")));
 			renderer.setHorizontalTextAlignment(SwingConstants.LEADING);
 			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			tabbedPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -187,13 +187,13 @@ public class ReactClient
 		panelTutorial.add(panel_1, "cell 0 2,grow");
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblLabel = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/server-low.png")));
+		JLabel lblLabel = new JLabel(new ImageIcon(ReactClient.class.getResource("/server-low.png")));
 		panel_1.add(lblLabel, BorderLayout.CENTER);
 		
-		JLabel lblLabel2 = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/icon.png")));
+		JLabel lblLabel2 = new JLabel(new ImageIcon(ReactClient.class.getResource("/icon.png")));
 		panel_1.add(lblLabel2, BorderLayout.WEST);
 		
-		JLabel lblNewLabel_1 = new JLabel(new ImageIcon(ReactClient.class.getResource("/org/cyberpwn/react/ui/icon.png")));
+		JLabel lblNewLabel_1 = new JLabel(new ImageIcon(ReactClient.class.getResource("/icon.png")));
 		panel_1.add(lblNewLabel_1, BorderLayout.EAST);
 		L.l("TUTORIAL LAUNCHED");
 	}

@@ -44,7 +44,7 @@ public class EditConnection extends JDialog
 	
 	public EditConnection(final NetworkedServer ns)
 	{
-		setIconImage(Toolkit.getDefaultToolkit().getImage(EditConnection.class.getResource("/org/cyberpwn/react/ui/server-low.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EditConnection.class.getResource("/server-low.png")));
 		setTitle("Add a Connection");
 		setBounds(100, 100, 450, 397);
 		getContentPane().setLayout(new BorderLayout());
