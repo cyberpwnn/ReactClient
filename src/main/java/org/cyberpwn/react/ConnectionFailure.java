@@ -1,6 +1,5 @@
 package org.cyberpwn.react;
 
-import com.sun.java.swing.SwingUtilities3;
 import org.cyberpwn.react.network.NetworkedServer;
 
 import javax.swing.*;
