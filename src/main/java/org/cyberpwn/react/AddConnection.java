@@ -98,9 +98,11 @@ public class AddConnection extends JDialog {
                 okButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        addServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText());
-                        setVisible(false);
-                        dispose();
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            addServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText());
+                            setVisible(false);
+                            dispose();
+                        }
                     }
                 });
                 okButton.setActionCommand("OK");
@@ -113,8 +115,10 @@ public class AddConnection extends JDialog {
                 cancelButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        setVisible(false);
-                        dispose();
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            setVisible(false);
+                            dispose();
+                        }
                     }
                 });
                 cancelButton.setActionCommand("Cancel");
