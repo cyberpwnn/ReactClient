@@ -1,9 +1,5 @@
 package org.cyberpwn.react.network;
 
-import java.io.IOException;
-
-import javax.swing.JLabel;
-
 import org.cyberpwn.react.L;
 import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.ui.ServerTab;
@@ -12,341 +8,284 @@ import org.cyberpwn.react.util.GMap;
 import org.cyberpwn.react.util.JSONArray;
 import org.cyberpwn.react.util.JSONObject;
 
-public class NetworkedServer
-{
-	private String name;
-	private String username;
-	private String password;
-	private String address;
-	private Integer port;
-	private GMap<String, Double> sample;
-	private ServerTab tab;
-	private Request rx;
-	private RequestActions ra;
-	private RequestTimings rt;
-	private String version;
-	private String versionBukkit;
-	private GList<String> actions;
-	private TimingsPackage timings;
-	private int req;
-	private int s;
-	private boolean gettingReactors;
+import javax.swing.*;
+import java.io.IOException;
 
-	public NetworkedServer(String name, String username, String password, String address, Integer port)
-	{
-		this.name = name;
-		req = 0;
-		this.username = username;
-		this.password = password;
-		this.address = address;
-		tab = null;
-		gettingReactors = true;
-		actions = null;
-		timings = null;
-		rt = null;
-		this.port = port;
-		sample = new GMap<String, Double>();
-		rx = null;
-		s = 0;
-		ra = null;
-		version = null;
-		versionBukkit = null;
-	}
+public class NetworkedServer {
+    private String name;
+    private String username;
+    private String password;
+    private String address;
+    private Integer port;
+    private GMap<String, Double> sample;
+    private ServerTab tab;
+    private Request rx;
+    private RequestActions ra;
+    private RequestTimings rt;
+    private String version;
+    private String versionBukkit;
+    private GList<String> actions;
+    private TimingsPackage timings;
+    private int req;
+    private int s;
+    private boolean gettingReactors;
 
-	public NetworkedServer(JSONObject js)
-	{
-		name = js.getString("name");
-		username = js.getString("username");
-		password = js.getString("password");
-		address = js.getString("address");
-		port = js.getInt("port");
-		tab = null;
-		sample = new GMap<String, Double>();
-		timings = null;
-	}
+    public NetworkedServer(String name, String username, String password, String address, Integer port) {
+        this.name = name;
+        req = 0;
+        this.username = username;
+        this.password = password;
+        this.address = address;
+        tab = null;
+        gettingReactors = true;
+        actions = null;
+        timings = null;
+        rt = null;
+        this.port = port;
+        sample = new GMap<String, Double>();
+        rx = null;
+        s = 0;
+        ra = null;
+        version = null;
+        versionBukkit = null;
+    }
 
-	public void toJson(JSONArray parent)
-	{
-		JSONObject js = new JSONObject();
+    public NetworkedServer(JSONObject js) {
+        name = js.getString("name");
+        username = js.getString("username");
+        password = js.getString("password");
+        address = js.getString("address");
+        port = js.getInt("port");
+        tab = null;
+        sample = new GMap<String, Double>();
+        timings = null;
+    }
 
-		js.put("name", name);
-		js.put("username", username);
-		js.put("password", password);
-		js.put("address", address);
-		js.put("port", port);
+    public void toJson(JSONArray parent) {
+        JSONObject js = new JSONObject();
 
-		parent.put(js);
-	}
+        js.put("name", name);
+        js.put("username", username);
+        js.put("password", password);
+        js.put("address", address);
+        js.put("port", port);
 
-	public void reset()
-	{
-		req = 0;
-	}
+        parent.put(js);
+    }
 
-	public void requestActions()
-	{
-		if(ReactClient.getInstance().isLocked(this))
-		{
-			return;
-		}
+    public void reset() {
+        req = 0;
+    }
 
-		if(actions != null)
-		{
-			return;
-		}
+    public void requestActions() {
+        if (ReactClient.getInstance().isLocked(this)) {
+            return;
+        }
 
-		gettingReactors = true;
+        if (actions != null) {
+            return;
+        }
 
-		tab.pushStartedActions();
+        gettingReactors = true;
 
-		if(ra != null && ra.isAlive())
-		{
-			return;
-		}
+        tab.pushStartedActions();
 
-		ra = new RequestActions(this, new RequestActionsCallback()
-		{
-			@Override
-			public void run()
-			{
-				if(isOk())
-				{
-					actions = getActions();
-					tab.push(actions);
-					gettingReactors = false;
-				}
-			}
-		});
+        if (ra != null && ra.isAlive()) {
+            return;
+        }
 
-		ra.start();
-		req++;
-		tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
+        ra = new RequestActions(this, new RequestActionsCallback() {
+            @Override
+            public void run() {
+                if (isOk()) {
+                    actions = getActions();
+                    tab.push(actions);
+                    gettingReactors = false;
+                }
+            }
+        });
 
-		if(req > 4)
-		{
-			L.n(NetworkedServer.this.getName() + " Failed to connect.");
-			tab.status(true, "No Connection");
-			ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
-		}
-	}
+        ra.start();
+        req++;
+        tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
 
-	public void requestTimings()
-	{
-		if(ReactClient.getInstance().isLocked(this))
-		{
-			return;
-		}
+        if (req > 4) {
+            L.n(NetworkedServer.this.getName() + " Failed to connect.");
+            tab.status(true, "No Connection");
+            ReactClient.getInstance().getNetwork().fail(NetworkedServer.this);
+        }
+    }
 
-		if(rt != null && rt.isAlive())
-		{
-			return;
-		}
+    public void requestTimings() {
+        if (ReactClient.getInstance().isLocked(this)) {
+            return;
+        }
 
-		rt = new RequestTimings(this, new RequestTimingsCallback()
-		{
-			@Override
-			public void run()
-			{
-				String tv = getTimings();
-				timings = new TimingsPackage();
+        if (rt != null && rt.isAlive()) {
+            return;
+        }
 
-				try
-				{
-					timings.fromData(tv);
-					tab.push(timings);
-				}
+        rt = new RequestTimings(this, new RequestTimingsCallback() {
+            @Override
+            public void run() {
+                String tv = getTimings();
+                timings = new TimingsPackage();
 
-				catch(IOException e)
-				{
+                try {
+                    timings.fromData(tv);
+                    tab.push(timings);
+                } catch (IOException e) {
 
-				}
-			}
-		});
+                }
+            }
+        });
 
-		rt.start();
-	}
+        rt.start();
+    }
 
-	public void requestSample()
-	{
-		if(gettingReactors)
-		{
-			return;
-		}
+    public void requestSample() {
+        if (gettingReactors) {
+            return;
+        }
 
-		s++;
+        s++;
 
-		if(version == null || versionBukkit == null)
-		{
-			new RequestBasic(this, new RequestCallbackBasic()
-			{
-				@Override
-				public void run()
-				{
-					if(isOk())
-					{
-						version = getData().get("version");
-						versionBukkit = getData().get("version-bukkit");
-					}
-				}
-			}).start();
-		}
+        if (version == null || versionBukkit == null) {
+            new RequestBasic(this, new RequestCallbackBasic() {
+                @Override
+                public void run() {
+                    if (isOk()) {
+                        version = getData().get("version");
+                        versionBukkit = getData().get("version-bukkit");
+                    }
+                }
+            }).start();
+        }
 
-		if(rx != null && rx.isAlive())
-		{
-			return;
-		}
+        if (rx != null && rx.isAlive()) {
+            return;
+        }
 
-		rx = new Request(this, new RequestCallback()
-		{
-			@Override
-			public void run()
-			{
-				if(isOk())
-				{
-					sample = getData();
-					tab.push(sample, getConsole());
+        rx = new Request(this, new RequestCallback() {
+            @Override
+            public void run() {
+                if (isOk()) {
+                    sample = getData();
+                    tab.push(sample, getConsole());
 
-					tab.status(false, "Connected");
+                    tab.status(false, "Connected");
 
-					s = 0;
-				}
-			}
-		});
+                    s = 0;
+                }
+            }
+        });
 
-		rx.start();
+        rx.start();
 
-		if(getDrops() > 2)
-		{
-			L.w(getName() + " dropped " + getDrops() + " packets");
-			tab.status(true, "Not Connected (" + getDrops() + " Dropouts)");
+        if (getDrops() > 2) {
+            L.w(getName() + " dropped " + getDrops() + " packets");
+            tab.status(true, "Not Connected (" + getDrops() + " Dropouts)");
 
-			if(getDrops() > 100)
-			{
-				tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
-				L.w(getName() + " has dropped over " + getDrops() + " packets.");
-				L.w(getName() + " lost connection. Reconnecting to reactors...");
-				ReactClient.getInstance().releaseConnection(this);
-				actions = null;
-				requestActions();
-			}
-		}
-	}
+            if (getDrops() > 100) {
+                tab.status(true, "Reconnecting (try " + req + " of 4" + ")");
+                L.w(getName() + " has dropped over " + getDrops() + " packets.");
+                L.w(getName() + " lost connection. Reconnecting to reactors...");
+                ReactClient.getInstance().releaseConnection(this);
+                actions = null;
+                requestActions();
+            }
+        }
+    }
 
-	public void push()
-	{
-		tab.push(sample);
-	}
+    public void push() {
+        tab.push(sample);
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getDrops()
-	{
-		return s;
-	}
+    public int getDrops() {
+        return s;
+    }
 
-	public String getUsername()
-	{
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username)
-	{
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getPassword()
-	{
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getAddress()
-	{
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(String address)
-	{
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public Integer getPort()
-	{
-		return port;
-	}
+    public Integer getPort() {
+        return port;
+    }
 
-	public void setPort(Integer port)
-	{
-		this.port = port;
-	}
+    public void setPort(Integer port) {
+        this.port = port;
+    }
 
-	public GMap<String, Double> getSample()
-	{
-		return sample;
-	}
+    public GMap<String, Double> getSample() {
+        return sample;
+    }
 
-	public void setSample(GMap<String, Double> sample)
-	{
-		this.sample = sample;
-	}
+    public void setSample(GMap<String, Double> sample) {
+        this.sample = sample;
+    }
 
-	public ServerTab getTab()
-	{
-		return tab;
-	}
+    public ServerTab getTab() {
+        return tab;
+    }
 
-	public void setTab(ServerTab tab)
-	{
-		this.tab = tab;
-	}
+    public void setTab(ServerTab tab) {
+        this.tab = tab;
+    }
 
-	public Request getRx()
-	{
-		return rx;
-	}
+    public Request getRx() {
+        return rx;
+    }
 
-	public String getVersion()
-	{
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getVersionBukkit()
-	{
-		return versionBukkit;
-	}
+    public String getVersionBukkit() {
+        return versionBukkit;
+    }
 
-	public void act(String action, final JLabel label)
-	{
-		label.setText("Preparing...");
-		RequestAction ra = new RequestAction(this, new RequestActionCallback()
-		{
-			@Override
-			public void run()
-			{
-				if(isOk())
-				{
-					label.setText("Action Completed");
-				}
-
-				else
-				{
-					label.setText("Failed... Check Console.");
-				}
-			}
-		}, action);
-		label.setText("Executing...");
-		ra.start();
-	}
+    public void act(String action, final JLabel label) {
+        label.setText("Preparing...");
+        RequestAction ra = new RequestAction(this, new RequestActionCallback() {
+            @Override
+            public void run() {
+                if (isOk()) {
+                    label.setText("Action Completed");
+                } else {
+                    label.setText("Failed... Check Console.");
+                }
+            }
+        }, action);
+        label.setText("Executing...");
+        ra.start();
+    }
 }
