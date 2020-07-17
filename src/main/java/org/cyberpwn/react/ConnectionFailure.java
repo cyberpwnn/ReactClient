@@ -45,7 +45,7 @@ public class ConnectionFailure extends JDialog
 		ReactClient.getInstance().lockConnection(ns);
 		setType(Type.POPUP);
 		setAlwaysOnTop(true);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectionFailure.class.getResource("/org/cyberpwn/react/ui/server-mini-red.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectionFailure.class.getResource("/server-mini-red.png")));
 		setBounds(100, 100, 394, 296);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.WHITE);

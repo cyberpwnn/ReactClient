@@ -46,7 +46,7 @@ public class AddConnection extends JDialog
 	
 	public AddConnection()
 	{
-		setIconImage(Toolkit.getDefaultToolkit().getImage(AddConnection.class.getResource("/org/cyberpwn/react/ui/server-low.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AddConnection.class.getResource("/server-low.png")));
 		setTitle("Add a Connection");
 		setBounds(100, 100, 450, 397);
 		getContentPane().setLayout(new BorderLayout());
