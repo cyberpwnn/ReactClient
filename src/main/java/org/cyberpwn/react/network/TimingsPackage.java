@@ -12,7 +12,7 @@ public class TimingsPackage {
     private final GList<TimingsElement> elements;
 
     public TimingsPackage() {
-        elements = new GList<TimingsElement>();
+        elements = new GList<>();
     }
 
     public String getData() throws IOException {
@@ -23,7 +23,7 @@ public class TimingsPackage {
         return new String(boas.toByteArray(), StandardCharsets.UTF_8);
     }
 
-    public void fromData(String comp) throws IOException {
+    public void fromData(String comp) {
         fromString(comp);
     }
 

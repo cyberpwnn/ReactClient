@@ -15,15 +15,7 @@
         <react.client.main>org.cyberpwn.react.ReactClient</react.client.main>
     </properties>
     <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <includes>
-                    <include>*.png</include>
-                </includes>
-                <targetPath>${project.basedir}/src/main/java/org/cyberpwn/react/ui</targetPath>
-            </resource>
-        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -38,6 +30,7 @@
                         <configuration>
                             <minimizeJar>true</minimizeJar>
                         </configuration>
+
                     </execution>
                 </executions>
             </plugin>
@@ -65,7 +58,7 @@
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>gui</headerType>
+                            <headerType>console</headerType>
                             <jar>target/${project.name}-${project.version}.jar</jar>
                             <outfile>target/${project.name}-${project.version}.exe</outfile>
                             <classPath>
@@ -121,6 +114,11 @@
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout</artifactId>
             <version>3.7.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20200518</version>
         </dependency>
     </dependencies>
 </project>

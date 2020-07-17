@@ -32,7 +32,7 @@ public class ReactClient {
         } catch (Exception e) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
 
             }
         }
@@ -67,7 +67,7 @@ public class ReactClient {
     }
 
     private void initialize() {
-        locks = new GList<NetworkedServer>();
+        locks = new GList<>();
         JMenuBar menuBar = new JMenuBar();
         JMenu mnReact = new JMenu("React");
         JMenuItem mntmAbout = new JMenuItem("About");

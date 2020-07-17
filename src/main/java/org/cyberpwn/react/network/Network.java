@@ -4,8 +4,8 @@ import org.cyberpwn.react.ConnectionFailure;
 import org.cyberpwn.react.L;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
-import org.cyberpwn.react.util.JSONArray;
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 
@@ -13,7 +13,7 @@ public class Network {
     private GMap<String, NetworkedServer> servers;
 
     public Network() {
-        servers = new GMap<String, NetworkedServer>();
+        servers = new GMap<>();
 
         File f = new File(new File(".").getAbsolutePath(), "react-data");
         f.mkdirs();
@@ -24,9 +24,7 @@ public class Network {
             try {
                 JSONObject jso = new JSONObject(readFile(c.getPath()));
 
-                if (jso != null) {
-                    fromJson(jso);
-                }
+                fromJson(jso);
             } catch (Exception e) {
                 L.l("Appears to be a new Config.");
 
@@ -91,7 +89,7 @@ public class Network {
     }
 
     public void fromJson(JSONObject network) {
-        servers = new GMap<String, NetworkedServer>();
+        servers = new GMap<>();
 
         JSONArray js = network.getJSONArray("servers");
 

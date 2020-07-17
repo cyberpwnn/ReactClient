@@ -39,7 +39,6 @@ public class ServerTab implements ListSelectionListener, ActionListener {
     private final JCheckBox chckbxNewCheckBox;
     private final JComboBox<String> comboBox;
 
-    private final JScrollBar vertical;
     private final JTextArea textArea;
     private final JButton btnNewButton;
     private final JList<String> actionSet;
@@ -269,7 +268,7 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         lblConnecting = new JLabel("Connecting...");
         lblConnecting.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
 
-        comboBox_1 = new JComboBox<String>();
+        comboBox_1 = new JComboBox<>();
         comboBox_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
         GroupLayout gl_panel_10 = new GroupLayout(panel_10);
         gl_panel_10.setHorizontalGroup(gl_panel_10.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, gl_panel_10.createSequentialGroup().addContainerGap().addGroup(gl_panel_10.createParallelGroup(Alignment.TRAILING).addComponent(CUSTOM, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE).addGroup(gl_panel_10.createSequentialGroup().addComponent(lblGraph).addPreferredGap(ComponentPlacement.RELATED, 324, Short.MAX_VALUE).addComponent(lblConnecting)).addComponent(comboBox_1, Alignment.LEADING, 0, 514, Short.MAX_VALUE)).addContainerGap()));
@@ -295,9 +294,9 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         lblSelectAnAction.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
         panel_12.add(lblSelectAnAction, "cell 0 0");
 
-        actionList = new DefaultListModel<String>();
+        actionList = new DefaultListModel<>();
 
-        actionSet = new JList<String>(actionList);
+        actionSet = new JList<>(actionList);
         actionSet.setBackground(Color.LIGHT_GRAY);
         actionSet.setFont(new Font("Segoe UI Light", Font.PLAIN, 24));
         actionSet.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -371,7 +370,7 @@ public class ServerTab implements ListSelectionListener, ActionListener {
             }
         });
 
-        comboBox = new JComboBox<String>();
+        comboBox = new JComboBox<>();
         comboBox.insertItemAt("Remote", 0);
         comboBox.insertItemAt("Local", 1);
         comboBox.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
@@ -416,7 +415,7 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         gl_panel_11.setVerticalGroup(gl_panel_11.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_11.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE).addContainerGap()));
         panel_11.setLayout(gl_panel_11);
 
-        vertical = scrollConsole.getVerticalScrollBar();
+        JScrollBar vertical = scrollConsole.getVerticalScrollBar();
         vertical.setValue(vertical.getMaximum());
     }
 

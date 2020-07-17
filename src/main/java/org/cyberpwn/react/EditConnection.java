@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 
 public class EditConnection extends JDialog {
     private static final long serialVersionUID = 801014377635942783L;
-    private final JPanel contentPanel = new JPanel();
     private final JTextField txtLocalhost;
     private final JTextField textField_1;
     private final JTextField txtCyberpwn;
@@ -24,6 +23,7 @@ public class EditConnection extends JDialog {
         setTitle("Add a Connection");
         setBounds(100, 100, 450, 397);
         getContentPane().setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -100,7 +100,7 @@ public class EditConnection extends JDialog {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         L.l("Connection edited");
-                        editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.valueOf(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
+                        editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
                         setVisible(false);
                         dispose();
                         ReactClient.getInstance().releaseConnection(ns);

@@ -7,15 +7,6 @@
   <version>2.5</version>
   <description>A client application for React servers</description>
   <build>
-    <resources>
-      <resource>
-        <targetPath>${project.basedir}/src/main/java/org/cyberpwn/react/ui</targetPath>
-        <directory>${project.basedir}/src/main/resources</directory>
-        <includes>
-          <include>*.png</include>
-        </includes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -55,7 +46,7 @@
               <goal>launch4j</goal>
             </goals>
             <configuration>
-              <headerType>gui</headerType>
+              <headerType>console</headerType>
               <jar>target/${project.name}-${project.version}.jar</jar>
               <outfile>target/${project.name}-${project.version}.exe</outfile>
               <classPath>

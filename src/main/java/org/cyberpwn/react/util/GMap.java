@@ -6,7 +6,7 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
     private static final long serialVersionUID = 1527847670799761130L;
 
     public GMap<K, V> copy() {
-        GMap<K, V> m = new GMap<K, V>();
+        GMap<K, V> m = new GMap<>();
 
         for (K k : this.keySet()) {
             m.put(k, get(k));
@@ -21,7 +21,7 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
     }
 
     public GMap<V, GList<K>> flip() {
-        GMap<V, GList<K>> flipped = new GMap<V, GList<K>>();
+        GMap<V, GList<K>> flipped = new GMap<>();
 
         for (K i : keySet()) {
             if (i == null) {
@@ -29,7 +29,7 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
             }
 
             if (!flipped.containsKey(get(i))) {
-                flipped.put(get(i), new GList<K>());
+                flipped.put(get(i), new GList<>());
             }
 
             flipped.get(get(i)).add(i);
@@ -40,7 +40,7 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
 
     @Override
     public String toString() {
-        GList<String> s = new GList<String>();
+        GList<String> s = new GList<>();
 
         for (K i : keySet()) {
             s.add(i.toString() + ": " + get(i).toString());
@@ -58,11 +58,11 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
     }
 
     public GList<K> k() {
-        return new GList<K>(keySet());
+        return new GList<>(keySet());
     }
 
     public GList<V> v() {
-        return new GList<V>(values());
+        return new GList<>(values());
     }
 
     public void putNVD(K k, V v) {
@@ -72,7 +72,7 @@ public class GMap<K, V> extends ConcurrentHashMap<K, V> {
     }
 
     public GList<V> get(GList<K> keys) {
-        GList<V> ulv = new GList<V>();
+        GList<V> ulv = new GList<>();
 
         for (K i : keys) {
             if (get(i) != null) {

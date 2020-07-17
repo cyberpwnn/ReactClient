@@ -1,6 +1,6 @@
 package org.cyberpwn.react.network;
 
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,7 +9,6 @@ import java.net.Socket;
 public class RequestTimings extends Thread {
     private final RequestTimingsCallback callback;
     private final NetworkedServer ns;
-    private Socket s;
 
     public RequestTimings(NetworkedServer ns, RequestTimingsCallback callback) {
         this.callback = callback;
@@ -19,7 +18,7 @@ public class RequestTimings extends Thread {
     @Override
     public void run() {
         try {
-            s = new Socket(ns.getAddress(), ns.getPort());
+            Socket s = new Socket(ns.getAddress(), ns.getPort());
             s.setSoTimeout(500);
             DataInputStream i = new DataInputStream(s.getInputStream());
             DataOutputStream o = new DataOutputStream(s.getOutputStream());
@@ -39,7 +38,7 @@ public class RequestTimings extends Thread {
                 String timings = ps.getString("timings");
                 callback.run(timings, false);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

@@ -24,9 +24,9 @@ public class TimingsElement {
 
     public void fromData(String s) {
         name = s.split(",,,,")[0];
-        pct = Double.valueOf(s.split(",,,,")[1]);
-        hits = Long.valueOf(s.split(",,,,")[2]);
-        violations = Long.valueOf(s.split(",,,,")[3]);
+        pct = Double.parseDouble(s.split(",,,,")[1]);
+        hits = Long.parseLong(s.split(",,,,")[2]);
+        violations = Long.parseLong(s.split(",,,,")[3]);
     }
 
     public String getName() {

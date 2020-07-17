@@ -5,8 +5,8 @@ import org.cyberpwn.react.ReactClient;
 import org.cyberpwn.react.ui.ServerTab;
 import org.cyberpwn.react.util.GList;
 import org.cyberpwn.react.util.GMap;
-import org.cyberpwn.react.util.JSONArray;
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class NetworkedServer {
         timings = null;
         rt = null;
         this.port = port;
-        sample = new GMap<String, Double>();
+        sample = new GMap<>();
         rx = null;
         s = 0;
         ra = null;
@@ -57,7 +57,7 @@ public class NetworkedServer {
         address = js.getString("address");
         port = js.getInt("port");
         tab = null;
-        sample = new GMap<String, Double>();
+        sample = new GMap<>();
         timings = null;
     }
 
@@ -131,12 +131,8 @@ public class NetworkedServer {
                 String tv = getTimings();
                 timings = new TimingsPackage();
 
-                try {
-                    timings.fromData(tv);
-                    tab.push(timings);
-                } catch (IOException e) {
-
-                }
+                timings.fromData(tv);
+                tab.push(timings);
             }
         });
 

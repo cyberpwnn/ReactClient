@@ -13,7 +13,7 @@ public class L {
             for (NetworkedServer i : ReactClient.getInstance().getNetwork().getServers()) {
                 i.push();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

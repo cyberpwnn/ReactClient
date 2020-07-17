@@ -1,8 +1,8 @@
 package org.cyberpwn.react.network;
 
 import org.cyberpwn.react.util.GList;
-import org.cyberpwn.react.util.JSONArray;
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class PacketResponse {
     private final JSONObject js;
@@ -75,7 +75,7 @@ public class PacketResponse {
     }
 
     public GList<String> getStringList(String s) {
-        GList<String> list = new GList<String>();
+        GList<String> list = new GList<>();
 
         for (Object i : js.getJSONArray(s)) {
             list.add(i.toString());

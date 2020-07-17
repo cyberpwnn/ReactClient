@@ -1,7 +1,7 @@
 package org.cyberpwn.react.network;
 
 import org.cyberpwn.react.util.GMap;
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,7 +10,6 @@ import java.net.Socket;
 public class RequestBasic extends Thread {
     private final RequestCallbackBasic callback;
     private final NetworkedServer ns;
-    private Socket s;
 
     public RequestBasic(NetworkedServer ns, RequestCallbackBasic callback) {
         this.callback = callback;
@@ -20,7 +19,7 @@ public class RequestBasic extends Thread {
     @Override
     public void run() {
         try {
-            s = new Socket(ns.getAddress(), ns.getPort());
+            Socket s = new Socket(ns.getAddress(), ns.getPort());
             s.setSoTimeout(500);
             DataInputStream i = new DataInputStream(s.getInputStream());
             DataOutputStream o = new DataOutputStream(s.getOutputStream());
@@ -29,7 +28,7 @@ public class RequestBasic extends Thread {
             o.flush();
             String response = i.readUTF();
             PacketResponse ps = new PacketResponse(new JSONObject(response));
-            GMap<String, String> data = new GMap<String, String>();
+            GMap<String, String> data = new GMap<>();
 
             if (ps.getString("type").equals("OK")) {
                 for (String j : ps.getJSON().keySet()) {
@@ -48,7 +47,7 @@ public class RequestBasic extends Thread {
             }
 
             callback.run(data, false);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

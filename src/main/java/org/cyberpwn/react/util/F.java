@@ -22,21 +22,21 @@ public class F {
     }
 
     public static String cname(String clazz) {
-        String codeName = "";
+        StringBuilder codeName = new StringBuilder();
 
         for (Character i : clazz.toCharArray()) {
             if (Character.isUpperCase(i)) {
-                codeName = codeName + "-" + Character.toLowerCase(i);
+                codeName.append("-").append(Character.toLowerCase(i));
             } else {
-                codeName = codeName + i;
+                codeName.append(i);
             }
         }
 
-        if (codeName.startsWith("-")) {
-            codeName = codeName.substring(1);
+        if (codeName.toString().startsWith("-")) {
+            codeName = new StringBuilder(codeName.substring(1));
         }
 
-        return codeName;
+        return codeName.toString();
     }
 
     public static String mem(long mb) {
@@ -58,13 +58,13 @@ public class F {
     }
 
     public static String repeat(String s, int p) {
-        String k = "";
+        StringBuilder k = new StringBuilder();
 
         for (int i = 0; i < p; i++) {
-            k = k + s;
+            k.append(s);
         }
 
-        return k;
+        return k.toString();
     }
 
     public static String f(double i, int p) {

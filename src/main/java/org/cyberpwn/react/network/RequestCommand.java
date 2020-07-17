@@ -1,7 +1,7 @@
 package org.cyberpwn.react.network;
 
 import org.cyberpwn.react.L;
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,7 +10,6 @@ import java.net.Socket;
 public class RequestCommand extends Thread {
     private final RequestCommandCallback callback;
     private final NetworkedServer ns;
-    private Socket s;
     private final String action;
 
     public RequestCommand(NetworkedServer ns, RequestCommandCallback callback, String action) {
@@ -23,7 +22,7 @@ public class RequestCommand extends Thread {
     public void run() {
         try {
             L.l("Requesting Command: " + action);
-            s = new Socket(ns.getAddress(), ns.getPort());
+            Socket s = new Socket(ns.getAddress(), ns.getPort());
             s.setSoTimeout(500);
             DataInputStream i = new DataInputStream(s.getInputStream());
             DataOutputStream o = new DataOutputStream(s.getOutputStream());
@@ -37,7 +36,7 @@ public class RequestCommand extends Thread {
             Thread.sleep(50);
 
             callback.run(ps.getString("type").equals("OK"));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

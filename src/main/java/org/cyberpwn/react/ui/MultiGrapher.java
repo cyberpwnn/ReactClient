@@ -13,7 +13,7 @@ public class MultiGrapher extends JPanel {
     private boolean rcColor;
     private int max;
     private GMap<Color, GList<Double>> data;
-    private boolean stack = false;
+    private boolean stack;
     private boolean steg = false;
 
     public MultiGrapher(int max, GMap<Color, GList<Double>> data) {
@@ -58,7 +58,7 @@ public class MultiGrapher extends JPanel {
             return;
         }
 
-        GList<Double> data = new GList<Double>();
+        GList<Double> data = new GList<>();
 
         double m = 100;
 

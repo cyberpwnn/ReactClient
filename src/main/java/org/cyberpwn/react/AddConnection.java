@@ -98,7 +98,7 @@ public class AddConnection extends JDialog {
                 okButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        addServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.valueOf(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText());
+                        addServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText());
                         setVisible(false);
                         dispose();
                     }

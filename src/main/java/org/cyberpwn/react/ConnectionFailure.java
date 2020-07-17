@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 
 public class ConnectionFailure extends JDialog {
     private static final long serialVersionUID = 1L;
-    private final JPanel contentPanel = new JPanel();
 
     /**
      * Create the dialog.
@@ -24,6 +23,7 @@ public class ConnectionFailure extends JDialog {
         setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectionFailure.class.getResource("/server-mini-red.png")));
         setBounds(100, 100, 394, 296);
         getContentPane().setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel();
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);

@@ -38,5 +38,6 @@
     </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.miglayout:miglayout:3.7.4" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20200518" level="project" />
   </component>
 </module>

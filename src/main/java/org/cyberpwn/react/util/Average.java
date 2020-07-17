@@ -7,7 +7,7 @@ public class Average {
 
     public Average(int limit) {
         this.limit = limit;
-        this.data = new GList<Double>();
+        this.data = new GList<>();
         this.average = 0.0;
     }
 

@@ -13,7 +13,7 @@ public class Grapher extends JPanel {
     private int max;
     private Color color;
     private GList<Double> data;
-    private boolean stack = false;
+    private boolean stack;
     private boolean steg = false;
 
     public Grapher(int max, Color color, GList<Double> data) {
@@ -59,7 +59,7 @@ public class Grapher extends JPanel {
             return;
         }
 
-        GList<Double> data = new GList<Double>();
+        GList<Double> data = new GList<>();
 
         double m = 100;
 

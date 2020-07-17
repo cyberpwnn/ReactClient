@@ -27,17 +27,13 @@ public class GList<T> extends ArrayList<T> {
     public GList(Set<T> set) {
         super();
 
-        for (T i : set) {
-            add(i);
-        }
+        this.addAll(set);
     }
 
     public GList(Collection<T> set) {
         super();
 
-        for (T i : set) {
-            add(i);
-        }
+        this.addAll(set);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,12 +46,9 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public T mostCommon() {
-        GMap<T, Integer> common = new GMap<T, Integer>();
-        Iterator<T> it = iterator();
+        GMap<T, Integer> common = new GMap<>();
 
-        while (it.hasNext()) {
-            T i = it.next();
-
+        for (T i : this) {
             if (!common.containsKey(i)) {
                 common.put(i, 0);
             }
@@ -84,9 +77,9 @@ public class GList<T> extends ArrayList<T> {
 
     @SuppressWarnings("unchecked")
     public GList<GList<T>> split() {
-        GList<GList<T>> mtt = new GList<GList<T>>();
-        GList<T> ma = new GList<T>();
-        GList<T> mb = new GList<T>();
+        GList<GList<T>> mtt = new GList<>();
+        GList<T> ma = new GList<>();
+        GList<T> mb = new GList<>();
 
         for (int i = 0; i < size() / 2; i++) {
             if (hasIndex(i)) {
@@ -119,7 +112,7 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public GList<String> stringList() {
-        GList<String> s = new GList<String>();
+        GList<String> s = new GList<>();
 
         for (T i : this) {
             s.add(i.toString());
@@ -129,7 +122,7 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public GList<T> removeDuplicates() {
-        Set<T> set = new LinkedHashSet<T>(this);
+        Set<T> set = new LinkedHashSet<>(this);
         clear();
         addAll(set);
 
@@ -137,15 +130,11 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public boolean hasDuplicates() {
-        return size() != new LinkedHashSet<T>(this).size();
+        return size() != new LinkedHashSet<>(this).size();
     }
 
     public void sort() {
-        Collections.sort(this, new Comparator<T>() {
-            public int compare(T o1, T o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-        });
+        this.sort(Comparator.comparing(Object::toString));
     }
 
     public void push(T value, int limit) {
@@ -158,9 +147,7 @@ public class GList<T> extends ArrayList<T> {
 
     @SuppressWarnings("unchecked")
     public void add(T... array) {
-        for (T i : array) {
-            add(i);
-        }
+        this.addAll(Arrays.asList(array));
     }
 
     public GList<T> qadd(T t) {
@@ -169,16 +156,14 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public void add(List<T> array) {
-        for (T i : array) {
-            add(i);
-        }
+        this.addAll(array);
     }
 
     public String toString(String split) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
 
         for (Object i : this) {
-            s = s + split + i.toString();
+            s.append(split).append(i.toString());
         }
 
         if (s.length() == 0) {
@@ -200,11 +185,9 @@ public class GList<T> extends ArrayList<T> {
     }
 
     public GList<T> copy() {
-        GList<T> c = new GList<T>();
+        GList<T> c = new GList<>();
 
-        for (T i : this) {
-            c.add(i);
-        }
+        c.addAll(this);
 
         return c;
     }

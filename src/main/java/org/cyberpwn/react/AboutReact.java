@@ -6,7 +6,6 @@ import java.awt.Window.Type;
 
 public class AboutReact {
     private JFrame frame;
-    private final String version = "2.5";
 
     public AboutReact() {
         initialize();
@@ -40,6 +39,7 @@ public class AboutReact {
         springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, -6, SpringLayout.NORTH, lblReactClient);
         frame.getContentPane().add(lblNewLabel);
 
+        String version = "2.5";
         JLabel labelVersion = new JLabel("Version " + version);
         springLayout.putConstraint(SpringLayout.NORTH, labelVersion, 24, SpringLayout.NORTH, lblReactClient);
         springLayout.putConstraint(SpringLayout.WEST, labelVersion, 6, SpringLayout.EAST, lblReactClient);

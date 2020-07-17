@@ -1,6 +1,6 @@
 package org.cyberpwn.react.network;
 
-import org.cyberpwn.react.util.JSONObject;
+import org.json.JSONObject;
 
 public class PacketRequest {
     private final String username;

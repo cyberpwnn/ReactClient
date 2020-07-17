@@ -20,7 +20,7 @@ public class TimingsCard extends JPanel {
     public TimingsCard() {
         setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
         setBackground(Color.WHITE);
-        data = new GList<Double>();
+        data = new GList<>();
         named = new JLabel("<TIMINGS>");
         named.setFont(new Font("Segoe UI Light", Font.PLAIN, 23));
 
