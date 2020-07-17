@@ -64,7 +64,7 @@ public class ServerTab implements ListSelectionListener, ActionListener {
     private String lastLog;
     private final int index;
     private boolean dead;
-    private final JButton btnNewButton_1;
+    private final JButton btnEditOrReconnect;
     private final JLabel lblGraph;
     private final JLabel lblConnecting;
     private final Grapher CUSTOM;
@@ -128,8 +128,8 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         lblConnection.setFont(new Font("Segoe UI Light", Font.PLAIN, 35));
         panel_8.add(lblConnection, "cell 0 0");
 
-        btnNewButton_1 = new JButton("Edit");
-        btnNewButton_1.addMouseListener(new MouseAdapter() {
+        btnEditOrReconnect = new JButton("Edit");
+        btnEditOrReconnect.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(SwingUtilities.isLeftMouseButton(e)) {
@@ -141,11 +141,11 @@ public class ServerTab implements ListSelectionListener, ActionListener {
                 }
             }
         });
-        btnNewButton_1.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-        panel_8.add(btnNewButton_1, "cell 0 2");
+        btnEditOrReconnect.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+        panel_8.add(btnEditOrReconnect, "cell 0 2");
 
-        JButton btnNewButton_2 = new JButton("Delete");
-        btnNewButton_2.addMouseListener(new MouseAdapter() {
+        JButton btnDelete = new JButton("Delete");
+        btnDelete.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(SwingUtilities.isLeftMouseButton(e)) {
@@ -153,8 +153,8 @@ public class ServerTab implements ListSelectionListener, ActionListener {
                 }
             }
         });
-        btnNewButton_2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
-        panel_8.add(btnNewButton_2, "cell 0 2");
+        btnDelete.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+        panel_8.add(btnDelete, "cell 0 2");
 
         label = new JLabel(new ImageIcon(ReactClient.class.getResource("/server-mini-red.png")));
         panel_8.add(label, "cell 0 3");
@@ -425,7 +425,7 @@ public class ServerTab implements ListSelectionListener, ActionListener {
 
     public void die() {
         dead = true;
-        btnNewButton_1.setText("Reconnect");
+        btnEditOrReconnect.setText("Reconnect");
     }
 
     public void pushStartedActions() {
@@ -576,5 +576,9 @@ public class ServerTab implements ListSelectionListener, ActionListener {
 
     public void push(TimingsPackage timings) {
 
+    }
+
+    public NetworkedServer getCurrentNetworkedServer() {
+        return ns;
     }
 }
