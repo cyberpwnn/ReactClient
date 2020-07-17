@@ -99,11 +99,13 @@ public class EditConnection extends JDialog {
                 okButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        L.l("Connection edited");
-                        editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
-                        setVisible(false);
-                        dispose();
-                        ReactClient.getInstance().releaseConnection(ns);
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            L.l("Connection edited");
+                            editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
+                            setVisible(false);
+                            dispose();
+                            ReactClient.getInstance().releaseConnection(ns);
+                        }
                     }
                 });
                 okButton.setActionCommand("OK");
@@ -116,9 +118,11 @@ public class EditConnection extends JDialog {
                 cancelButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        L.l("Edit connection cancelled");
-                        setVisible(false);
-                        dispose();
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            L.l("Edit connection cancelled");
+                            setVisible(false);
+                            dispose();
+                        }
                     }
                 });
                 cancelButton.setActionCommand("Cancel");
