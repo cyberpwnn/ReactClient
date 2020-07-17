@@ -20,7 +20,7 @@ public class EditConnection extends JDialog {
 
     public EditConnection(final NetworkedServer ns) {
         setIconImage(Toolkit.getDefaultToolkit().getImage(EditConnection.class.getResource("/server-low.png")));
-        setTitle("Add a Connection");
+        setTitle("Edit Connection");
         setBounds(100, 100, 450, 397);
         getContentPane().setLayout(new BorderLayout());
         JPanel contentPanel = new JPanel();
