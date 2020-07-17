@@ -132,10 +132,12 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         btnNewButton_1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (dead) {
-                    ReactClient.restart();
-                } else {
-                    ReactClient.getInstance().editConnection(ns);
+                if(SwingUtilities.isLeftMouseButton(e)) {
+                    if (dead) {
+                        ReactClient.restart();
+                    } else {
+                        ReactClient.getInstance().editConnection(ns);
+                    }
                 }
             }
         });
@@ -146,7 +148,9 @@ public class ServerTab implements ListSelectionListener, ActionListener {
         btnNewButton_2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                ReactClient.getInstance().deleteConnection(ns);
+                if(SwingUtilities.isLeftMouseButton(e)) {
+                    ReactClient.getInstance().deleteConnection(ns);
+                }
             }
         });
         btnNewButton_2.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
