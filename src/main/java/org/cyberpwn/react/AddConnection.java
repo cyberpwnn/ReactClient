@@ -8,10 +8,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class AddConnection extends JDialog {
     private static final long serialVersionUID = 801014377635942783L;
-    private final JPanel contentPanel = new JPanel();
+    private final JLabel lblExists;
     private final JTextField txtLocalhost;
     private final JTextField textField_1;
     private final JTextField txtCyberpwn;
@@ -23,6 +24,7 @@ public class AddConnection extends JDialog {
         setTitle("Add a Connection");
         setBounds(100, 100, 450, 397);
         getContentPane().setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -89,6 +91,13 @@ public class AddConnection extends JDialog {
             contentPanel.add(txtReactisawesome, "cell 0 7,growx");
         }
         {
+            lblExists = new JLabel("Server name already exists");
+            lblExists.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+            lblExists.setForeground(Color.RED);
+            lblExists.setVisible(false);
+            contentPanel.add(lblExists, "cell 0 8");
+        }
+        {
             JPanel buttonPane = new JPanel();
             buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -98,10 +107,8 @@ public class AddConnection extends JDialog {
                 okButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if(SwingUtilities.isLeftMouseButton(e)) {
+                        if (SwingUtilities.isLeftMouseButton(e)) {
                             addServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText());
-                            setVisible(false);
-                            dispose();
                         }
                     }
                 });
@@ -115,7 +122,7 @@ public class AddConnection extends JDialog {
                 cancelButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if(SwingUtilities.isLeftMouseButton(e)) {
+                        if (SwingUtilities.isLeftMouseButton(e)) {
                             setVisible(false);
                             dispose();
                         }
@@ -138,6 +145,14 @@ public class AddConnection extends JDialog {
     }
 
     public void addServer(String name, String address, int port, String username, String password) {
-        ReactClient.getInstance().validateConnectionAdd(name, address, port, username, password);
+        ArrayList<String> networkedServerNames = new ArrayList<>();
+        ReactClient.getInstance().getNetwork().getServers().forEach((networkedServer -> networkedServerNames.add(networkedServer.getName())));
+        if (networkedServerNames.contains(name)) {
+            lblExists.setVisible(true);
+        } else {
+            ReactClient.getInstance().validateConnectionAdd(name, address, port, username, password);
+            setVisible(false);
+            dispose();
+        }
     }
 }

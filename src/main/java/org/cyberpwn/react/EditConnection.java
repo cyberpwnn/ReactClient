@@ -9,9 +9,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class EditConnection extends JDialog {
     private static final long serialVersionUID = 801014377635942783L;
+    private final JLabel lblExists;
     private final JTextField txtLocalhost;
     private final JTextField textField_1;
     private final JTextField txtCyberpwn;
@@ -90,6 +92,13 @@ public class EditConnection extends JDialog {
             contentPanel.add(txtReactisawesome, "cell 0 7,growx");
         }
         {
+            lblExists = new JLabel("Server name already exists");
+            lblExists.setFont(new Font("Segoe UI Light", Font.PLAIN, 18));
+            lblExists.setForeground(Color.RED);
+            lblExists.setVisible(false);
+            contentPanel.add(lblExists, "cell 0 8");
+        }
+        {
             JPanel buttonPane = new JPanel();
             buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -102,9 +111,6 @@ public class EditConnection extends JDialog {
                         if(SwingUtilities.isLeftMouseButton(e)) {
                             L.l("Connection edited");
                             editServer(txtFancyServer.getText(), txtLocalhost.getText(), Integer.parseInt(textField_1.getText()), txtCyberpwn.getText(), txtReactisawesome.getText(), ns);
-                            setVisible(false);
-                            dispose();
-                            ReactClient.getInstance().releaseConnection(ns);
                         }
                     }
                 });
@@ -142,6 +148,20 @@ public class EditConnection extends JDialog {
     }
 
     public void editServer(String name, String address, int port, String username, String password, NetworkedServer ns) {
-        ReactClient.getInstance().validateConnectionEdit(name, address, port, username, password, ns);
+        ArrayList<String> networkedServerNames = new ArrayList<>();
+        ReactClient.getInstance().getNetwork().getServers().forEach((networkedServer -> {
+            networkedServerNames.add(networkedServer.getName());
+            L.l("Added " + networkedServer.getName());
+        }));
+        networkedServerNames.remove(ns.getName());
+        L.l("Removed " + name);
+        if (networkedServerNames.contains(name)) {
+            lblExists.setVisible(true);
+        } else {
+            ReactClient.getInstance().validateConnectionEdit(name, address, port, username, password, ns);
+            setVisible(false);
+            dispose();
+            ReactClient.getInstance().releaseConnection(ns);
+        }
     }
 }
