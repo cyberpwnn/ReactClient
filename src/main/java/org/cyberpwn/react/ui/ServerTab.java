@@ -442,6 +442,8 @@ public class ServerTab implements ListSelectionListener, ActionListener {
 
     public void push(GMap<String, Double> sample, String console) {
         sample.put("rct", sample.get("rct") / 1000000.0);
+        sample.put("mah/s", sample.get("mah/s") / 1024D / 1024D);
+        sample.put("mem", sample.get("mem") / 1024 / 1024);
         lastConsole = StringUtils.repeat("\n", 40) + console;
         lastLog = StringUtils.repeat("\n", 40) + L.log;
 
