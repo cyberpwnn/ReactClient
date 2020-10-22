@@ -1,5 +1,6 @@
 package org.cyberpwn.react.network;
 
+import org.cyberpwn.react.L;
 import org.cyberpwn.react.util.GMap;
 import org.json.JSONObject;
 
@@ -24,10 +25,12 @@ public class Request extends Thread {
             DataInputStream i = new DataInputStream(s.getInputStream());
             DataOutputStream o = new DataOutputStream(s.getOutputStream());
             PacketRequest pr = new PacketRequest(ns.getUsername(), ns.getPassword(), PacketRequestType.GET_SAMPLES.toString());
+            //L.n("OUT: " + pr.toString());
             o.writeUTF(pr.toString());
             o.flush();
             String response = i.readUTF();
             PacketResponse ps = new PacketResponse(new JSONObject(response));
+            //L.n("IN: " + ps.toString());
             GMap<String, Double> data = new GMap<>();
             String console = "";
 
